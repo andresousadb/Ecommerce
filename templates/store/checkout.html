@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        {% include 'includes/alerts.html' %}
+        <!-- row -->
+        <div class="row">
+
+            <div class="col-md-7">
+                <!-- Billing Details -->
+                <div class="billing-details">
+                    <div class="section-title">
+                        <h3 class="title">Dados Cliente</h3>
+                    </div>
+
+                    <form action="{% url 'place_order' %}" method='POST'>
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <input class="input" type="text" name="f_name" placeholder="Nome">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="l_name" placeholder="Último Nome">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="tel" name="tel" placeholder="Telefone">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" name="city" placeholder="Cidade">
+                        </div>
+                	</div>
+                <!-- /Billing Details -->
+           	 </div>
+            <!-- col -->
+
+            <!-- Order Details -->
+            <div class="col-md-5 order-details">
+                <div class="section-title text-center">
+                    <h3 class="title">Seu pedido</h3>
+                </div>
+                <div class="order-summary">
+                    <div class="order-col">
+                        <div><strong>PRODUTOS</strong></div>
+                        <div><strong>TOTAL</strong></div>
+                    </div>
+                    <div class="order-products">
+                        {% for item in cart_items %}
+                        <div class="order-col">
+                            <div>{{item.product.name}} <b>x {{item.quantity}}</b></div>
+                            <div>${{item.subtotal}}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!--							<div class="order-col">-->
+                    <!--								<div>Shiping</div>-->
+                    <!--								<div><strong>${{shipping_price}}</strong></div>-->
+                    <!--							</div>-->
+
+                    <!--							<div class="order-col">-->
+                    <!--								<div>Tax 2%</div>-->
+                    <!--								<div><strong>${{tax}}</strong></div>-->
+                    <!--							</div>-->
+
+                    <div class="order-col">
+                        <div><strong>GRAND TOTAL</strong></div>
+                        <div><strong class="order-total">${{grand_total}}</strong></div>
+                    </div>
+                </div>
+
+                <div class="input-checkbox">
+                    <input checked type="checkbox" id="terms" name="terms">
+
+                    <label for="terms">
+                        <span></span>
+                        Li e aceito os <a href="#">termos e condições </a>
+                    </label>
+                </div>
+                <a href="https://wa.me/+5561995020150?text=Olá,%20gostaria%20de%20fazer%20um%20pedido.%20Por%20favor,%20veja%20o%20PDF%20com%20as%20informações%20do%20pedido:%0A%0Afile:///caminho/para/seu/arquivo/pedido.pdf"
+                   class="primary-btn order-submit btn-block" style="background-color:black;color:#ff0000;">Realizar Pedido</a>
+
+				</form>
+                <a href="{% url 'store' %}" class="primary-btn order-submit"
+                   style="background-color:black;color:#ff0000;">Continue Comprando</a>
+            </div>
+            <!-- /Order Details -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+
+{% endblock content %}
+
+		

@@ -1,0 +1,49 @@
+	<!-- FOOTER -->
+		<footer id="footer">
+			<!-- top footer -->
+			<div class="section">
+				<!-- container -->
+				<div class="container">
+					<!-- row -->
+					<div class="row">
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">Sobre Nós</h3>
+								<ul class="footer-links">
+									<li><a href="{% url 'index' %}"><i class="fa fa-signal" aria-hidden="true"></i>GordeGames® - Eletônicos</a></li>
+									<li><a href="https://maps.app.goo.gl/iYwjWnAPpfT1AMVV8" target="_blank"><i class="fa fa-map-marker"></i>Localização</a></li>
+									<li><a href="https://wa.me/+5561995020150"><i class="fa fa-phone"></i> Entre em contato </a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">Categorias</h3>
+								<ul class="footer-links">
+								{% for catg in cat_links %}
+									<li><a href="{{ catg.get_url }}">{{ catg.name }}</a></li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+
+						<div class="clearfix visible-xs"></div>
+						<div class="col-md-3 col-xs-6">
+							<div class="footer">
+								<h3 class="footer-title">Serviços</h3>
+								<ul class="footer-links">
+									<li><a href="#">Minha conta</a></li>
+									<li><a href="#">Visualizar carrinho</a></li>
+									<li><a href="#">Acompanhar pedido</a></li>
+									<li><a href="#">Ajuda</a></li>
+								</ul>
+							</div>
+						</div>						
+					</div>
+					<!-- /row -->
+				</div>
+				<!-- /container -->
+			</div>
+			<!-- /top footer -->
+		</footer>
+		<!-- /FOOTER -->

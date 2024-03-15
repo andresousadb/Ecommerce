@@ -1,0 +1,124 @@
+{% load static %}
+<!-- HEADER -->
+		<header>
+			<!-- TOP HEADER -->
+			<div id="top-header">
+				<div class="container">
+					<ul class="header-links pull-left">
+						<li><a href="https://wa.me/+5561995020150"><i class="fa fa-phone"></i> Entre em contato </a></li>
+						<li><a href="https://maps.app.goo.gl/iYwjWnAPpfT1AMVV8" target="_blank"><i class="fa fa-map-marker"></i>Localização</a></li>
+					</ul>
+					<ul class="header-links pull-right" style="margin-right:3em;">
+						<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-user-o"></i> Minha Conta</a>
+						<ul class="dropdown-menu" style="background-color:black; color:red;">
+						{% if user.is_authenticated %}
+						<li><a href="{% url 'dashboard' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='red'" onMouseOut="this.style.color='white'">Painel</a></li>
+						<li><a href="{% url 'logout' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='red'" onMouseOut="this.style.color='white'">Sair</a></li>
+						{% else %}
+						<li><a href="{% url 'login' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='red'" onMouseOut="this.style.color='white'">Login</a></li>
+						<li><a href="{% url 'register' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='red'" onMouseOut="this.style.color='white'">Register</a></li>
+						{% endif %}
+						</ul>
+					</li>
+					</ul>
+				</div>
+			</div>
+			<!-- /TOP HEADER -->
+
+			<!-- MAIN HEADER -->
+			<div id="header">
+				<!-- container -->
+				<div class="container">
+					<!-- row -->
+					<div class="row">
+						<!-- LOGO -->
+						<div class="col-md-3">
+							<div class="header-logo">
+								<a href="{% url 'index' %}" class="logo">
+									<h5 style="color: #ffffff; margin-top: 2em;" onMouseOver="this.style.color='white'" onMouseOut="this.style.color='red'"><i class="fa fa-signal" aria-hidden="true"></i> GordeGames® - Eletrônicos</h5>
+								</a>
+							</div>
+						</div>
+						<!-- /LOGO -->
+
+						<!-- SEARCH BAR -->
+						<div class="col-md-6">
+							<div class="header-search">
+								<form action="{% url 'search' %}" method="GET">
+									<select class="input-select" onchange="if (this.value) window.location.href=this.value">
+									<option>Categorias</option>
+									{% for catg in cat_links %}
+										<option value="{{ catg.get_url }}">{{ catg.name | truncatewords:"1" }}</option>
+						            {% endfor %}
+									</select>
+									<input class="input" placeholder="Digite" name="keyword">
+									<button class="search-btn" type="submit">Procurar</button>
+								</form>
+							</div>
+						</div>
+						
+						<!-- /SEARCH BAR -->
+
+						<!-- ACCOUNT -->
+						<div class="col-md-3 clearfix">
+							<div class="header-ctn">
+								<!-- Cart -->
+								<div>
+									<a href="{% url 'cart' %}">
+										<i class="fa fa-shopping-cart"></i>
+										<span>Carrinho</span>
+										<div class="qty">{{ cart_count }}</div>
+									</a>
+								</div>
+								<!-- /Cart -->
+
+								<!-- Menu Toogle -->
+								<div class="menu-toggle">
+									<a href="#">
+										<i class="fa fa-bars"></i>
+										<span>Menu</span>
+									</a>
+								</div>
+								<!-- /Menu Toogle -->
+							</div>
+						</div>
+						<!-- /ACCOUNT -->
+					</div>
+					<!-- row -->
+				</div>
+				<!-- container -->
+			</div>
+			<!-- /MAIN HEADER -->
+		</header>
+		<!-- /HEADER -->
+
+		<!-- NAVIGATION -->
+		<nav id="navigation">
+			<!-- container -->
+			<div class="container">
+				<!-- responsive-nav -->
+				<div id="responsive-nav">
+					<!-- NAV -->
+					<ul class="main-nav nav navbar-nav">
+						<li><a href="{% url 'index' %}">Inicio</a></li>
+						<li><a href="{% url 'store' %}">Produtos</a></li>
+						<li class="dropdown">
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">Categorias
+						<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+						{% for catg in cat_links %}
+						<li><a id="categelems" href="{{ catg.get_url }}">{{ catg.name }}</a></li>
+						{% endfor %}
+						</ul>
+					</li>
+						
+						
+					</ul>
+					<!-- /NAV -->				
+				</div>
+				<!-- /responsive-nav -->
+			</div>
+			<!-- /container -->
+		</nav>
+		<!-- /NAVIGATION -->
