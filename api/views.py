@@ -2,9 +2,9 @@
 from rest_framework import generics, permissions
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from .serializers import CategorySerializer, ProductSerializer, ReviewRatingSerializer, OrderProductSerializer
+from .serializers import CategorySerializer, ProductSerializer, ReviewRatingSerializer
 from store.models import Product, ReviewRating
-from orders.models import OrderProduct
+
 
 class CategorySerializerList(generics.ListAPIView):
     serializer_class = CategorySerializer
@@ -32,14 +32,3 @@ class ReviewRatingList(generics.ListAPIView):
     def get(self, *args, **kwargs):
         return super().get(*args, **kwargs)
 
-class OrderProductList(generics.ListAPIView):
-
-    queryset = OrderProduct.objects.filter(ordered=True)
-    serializer_class = OrderProductSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    filter_fields = ('order', 'payment', 'user', 'product', 'quantity', 'product_price', 'ordered', 'created_at', 'updated_at')
-    search_fields = ('^payment__payment_id',)
-
-    @method_decorator(cache_page(60*60*2))
-    def get(self, *args, **kwargs):
-        return super().get(*args, **kwargs)

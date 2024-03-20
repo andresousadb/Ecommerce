@@ -3,100 +3,95 @@
 
 {% block content %}
 
-
 <section class="section-content padding-y bg">
-<div class="container">
+    <div class="container">
 
-<!-- ============================ COMPONENT 1 ================================= -->
-{% if not cart_items %}
-<div class="text-center" style='margin-top:1em;'>
-<h3>Seu carrinho de compras está vazio</h3>
-<a href="{% url 'store' %}" type="button" class="btn btn-lg" style="background-color:black; color:#ff0000;">Continue comprando</a>
-</div>
-{% else %}
-<div class="row">
-	<aside class="col-lg-9">
-<div class="card">
-<table class="table table-borderless table-shopping-cart">
-<thead class="text-muted">
-<tr class="small text-uppercase">
-  <th scope="col">Produto</th>
-  <th scope="col" width="120">Quantidade</th>
-  <th scope="col" width="120">Preço</th>
-  <th scope="col" class="text-right" width="200"> </th>
-</tr>
-</thead>
-<tbody>
+        <!-- ============================ COMPONENT 1 ================================= -->
+        {% if not cart_items %}
+            <div class="text-center" style='margin-top:1em;'>
+                <h3>Seu carrinho de compras está vazio</h3>
+                <a href="{% url 'store' %}" type="button" class="btn btn-lg" style="background-color:black; color:#ff0000;">Continue comprando</a>
+            </div>
+        {% else %}
+            <div class="row">
+                <aside class="col-lg-9">
+                    <div class="card">
+                        <table class="table table-borderless table-shopping-cart">
+                            <thead class="text-muted">
+                                <tr class="small text-uppercase">
+                                    <th scope="col">Produto</th>
+                                    <th scope="col" width="120">Quantidade</th>
+                                    <th scope="col" width="120">Preço</th>
+                                    <th scope="col" class="text-right" width="200"> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cart_item in cart_items %}
+                                    <tr>
+                                        <td>
+                                            <figure class="itemside align-items-center">
+                                                <div class="aside"><img src="{{ cart_item.product.product_image.url }}" class="img-sm"></div>
+                                                <figcaption class="info">
+                                                    <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.name }}</a>
+                                                </figcaption>
+                                            </figure>
+                                        </td>
+                                        <td>
+                                            <div class="col">
+                                                <div class="input-group input-spinner">
+                                                    <div class="input-group-prepend">
+                                                        <a href="{% url 'remove_cart' cart_item.product.id %}" class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i></a>
+                                                    </div>
+                                                    <input type="text" class="form-control" readonly="readonly"  value="{{ cart_item.quantity }}">
+                                                    <div class="input-group-append">
+                                                        <a href="{% url 'add_cart' cart_item.product.id %}" class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="price-wrap">
+                                                <var class="price">R$ {{ cart_item.subtotal }}</var>
+                                                <small class="text-muted">{% if cart_item.product.discount_price %} R$ {{ cart_item.product.discount_price }} <del class="product-old-price">R$ {{ cart_item.product.price }}</del>{% else %}R$ {{ cart_item.product.price }}{% endif %}</small>
+                                            </div>
+                                        </td>
+                                        <td class="text-right">
+                                            <a href="{% url 'remove_cart_item' cart_item.product.id %}" style="background-color:#ff0000;color:white;" class="btn"> Remover</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </aside>
 
-{% for cart_item in cart_items %}
+                <aside class="col-lg-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <dl class="dlist-align">
+                                <dt>Preço Total:</dt>
+                                <dd class="text-right text-dark b"><strong>R$ {{ total }}</strong></dd>
+                            </dl>
+                            <br>
+                            <hr>
+                            <p class="text-center mb-3">
+                                <img src="{% static 'img/payments.png' %}" height="26">
+                            </p>
+<!--                            <a href="{% url 'checkout' %}" style="background-color:black;color:#ff0000;" class="btn btn-block"> Confira </a>-->
+                            {% if request.user.is_authenticated %}
+                                    <a href="{% url 'checkout' %}" style="background-color:black;color:#ff0000;" class="btn btn-block">Confira</a>
+                                {% else %}
+                                    <a href="{% url 'login' %}?next={% url 'checkout' %}" style="background-color:black;color:#ff0000;" class="btn btn-block">Fazer login</a>
+                                {% endif %}
+                            <a href="{% url 'store' %}" style="background-color:black;color:#ff0000;" class="btn btn-light btn-block">Continue Comprando</a>
+                            <a href="{% url 'clear_cart' %}" style="background-color:black;color:#ff0000;" class="btn btn-light btn-block">Limpar Carrinho</a> <!-- Botão para limpar o carrinho -->
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        {% endif %}
 
-<tr>
-	<td>
-		<figure class="itemside align-items-center">
-			<div class="aside"><img src="{{ cart_item.product.product_image.url }}" class="img-sm"></div>
-			<figcaption class="info">
-				<a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.name }}</a>
-			</figcaption>
-		</figure>
-	</td>
-	<td> 
-		<!-- col.// -->
-					<div class="col"> 
-						<div class="input-group input-spinner">
-							<div class="input-group-prepend">
-							<a href="{% url 'remove_cart' cart_item.product.id %}" class="btn btn-light" type="button" id="button-plus"> <i class="fa fa-minus"></i></a>
-							</div>
-							<input type="text" class="form-control" readonly="readonly"  value="{{ cart_item.quantity }}">
-							<div class="input-group-append">
-							<a href="{% url 'add_cart' cart_item.product.id %}" class="btn btn-light" type="button" id="button-minus"> <i class="fa fa-plus"></i></a>
-							</div>
-						</div> <!-- input-group.// -->
-					</div> <!-- col.// -->
-	</td>
-	<td>
-		<div class="price-wrap">
-			<var class="price">R$ {{ cart_item.subtotal }}</var>
-			
-			<small class="text-muted">{% if cart_item.product.discount_price %} R$ {{ cart_item.product.discount_price }} <del class="product-old-price">R$ {{ cart_item.product.price }}</del>{% else %}R$ {{ cart_item.product.price }}{% endif %}</small>
-		</div> <!-- price-wrap .// -->
-	</td>
-	<td class="text-right"> 
-	<a href="{% url 'remove_cart_item' cart_item.product.id %}" style="background-color:#ff0000;color:white;" class="btn"> Remover</a>
-	</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-</div> <!-- card.// -->
-
-	</aside> <!-- col.// -->
-	<aside class="col-lg-3">
-
-		<div class="card">
-		<div class="card-body">
-			<dl class="dlist-align">
-			  <dt>Total price:</dt>
-			 <dd class="text-right text-dark b"><strong>R$ {{ total }}</strong></dd>
-			</dl>
-			<br>
-			<hr>
-			<p class="text-center mb-3">
-				<img src="{% static 'img/payments.png' %}" height="26">
-			</p>
-			<a href="{% url 'checkout' %}" style="background-color:black;color:#ff0000;" class="btn btn-block"> Confira </a>
-			<a href="{% url 'store' %}" style="background-color:black;color:#ff0000;" class="btn btn-light btn-block">Continue Comprando</a>
-		</div> <!-- card-body.// -->
-		</div> <!-- card.// -->
-
-</aside> <!-- col.// -->
-
-
-</div> <!-- row.// -->
-{% endif %}
-<!-- ============================ COMPONENT 1 END .// ================================= -->
-
-</div> <!-- container .//  -->
+    </div>
 </section>
-<!-- ========================= SECTION CONTENT END// ========================= -->
 
 {% endblock content %}

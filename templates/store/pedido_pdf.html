@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedido</title>
+    <style>
+        /* Estilos CSS */
+        body {
+            font-family: Arial, sans-serif; /* Define a fonte padrão */
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center
+        }
+        h2 {
+            font-size: 24px;
+        }
+        ul {
+            list-style-type: none; /* Remove os marcadores de lista */
+            padding: 0; /* Remove o preenchimento padrão */
+        }
+        li {
+            font-size: 18px; /* Define o tamanho da fonte para os itens da lista */
+            margin-bottom: 10px; /* Adiciona um espaçamento inferior entre os itens da lista */
+        }
+        h2 {
+            margin-top: 20px; /* Adiciona um espaçamento superior entre os cabeçalhos h2 e o conteúdo anterior */
+        }
+        h2:last-of-type {
+            margin-top: 40px; /* Adiciona um espaçamento superior extra entre o último cabeçalho h2 e o conteúdo anterior */
+        }
+    </style>
+</head>
+<body>
+    {% if city %}
+    <h1>Dados do Cliente</h1>
+    <h2>Nome: {{ pdf.f_name }} {{ pdf.l_name }}</h2>
+     <h2>Telefone: {{ pdf.tel }} </h2>
+     <h2>Cidade: {{ city }}</h2>
+    {% else %}
+    <p>Dados do Cliente não disponíveis.</p>
+    {% endif %}
+
+    <h1>Detalhes do Pedido</h1>
+    <h2>Produtos:</h2>
+    <ul>
+        {% for item in cart_items %}
+            <li>{{ item.product.name }} x {{ item.quantity }} - R$ {{ item.subtotal }}</li>
+        {% endfor %}
+    </ul>
+    <h2>Total Compras: R$ {{ grand_total }}</h2>
+
+
+</body>
+</html>
+

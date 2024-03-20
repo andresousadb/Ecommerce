@@ -2,37 +2,33 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+from django.contrib.auth.models import BaseUserManager
+
 class MyAccountManager(BaseUserManager):
-    def create_user(self, f_name, l_name, email, password=None):
+    def create_user(self, f_name, l_name, email, tel=None, password=None, **extra_fields):
         if not email:
-            raise ValueError('Forneça um endereço de e-mail válido..')
-
-        user = self.model(
-            email = self.normalize_email(email),
-            f_name = f_name,
-            l_name = l_name,
-        )
-
+            raise ValueError('O endereço de e-mail deve ser definido')
+        email = self.normalize_email(email)
+        user = self.model(f_name=f_name, l_name=l_name, email=email, tel=tel, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-        
         return user
 
-    def create_superuser(self, f_name, l_name, email, password):
-        user = self.create_user(
-            email = self.normalize_email(email),
-            f_name = f_name,
-            l_name = l_name,
-            password = password
-        )
+    def create_superuser(self, f_name, l_name, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_admin', True)
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_active', True)
+        extra_fields.setdefault('is_superadmin', True)
 
-        user.is_admin = True
-        user.is_active = True
-        user.is_staff = True
-        user.is_superadmin = True
-        user.save(using=self._db)
+        if extra_fields.get('is_admin') is not True:
+            raise ValueError('Superusuário deve ter is_admin=True.')
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superusuário deve ter is_staff=True.')
+        if extra_fields.get('is_active') is not True:
+            raise ValueError('Superusuário deve ter is_active=True.')
 
-        return user
+        return self.create_user(f_name, l_name, email, None, password, **extra_fields)
+
 
 class Account(AbstractBaseUser):
     f_name = models.CharField(max_length=50)
@@ -63,16 +59,78 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, add_label):
         return True
 
+CIDADE = (
+    ('Rio Branco', 'Rio Branco'),
+    ('Maceió', 'Maceió'),
+    ('Macapá', 'Macapá'),
+    ('Manaus', 'Manaus'),
+    ('Salvador', 'Salvador'),
+    ('Fortaleza', 'Fortaleza'),
+    ('Brasília', 'Brasília'),
+    ('Vitória', 'Vitória'),
+    ('Goiânia', 'Goiânia'),
+    ('São Luís', 'São Luís'),
+    ('Cuiabá', 'Cuiabá'),
+    ('Campo Grande', 'Campo Grande'),
+    ('Belo Horizonte', 'Belo Horizonte'),
+    ('Belém', 'Belém'),
+    ('João Pessoa', 'João Pessoa'),
+    ('Curitiba', 'Curitiba'),
+    ('Recife', 'Recife'),
+    ('Teresina', 'Teresina'),
+    ('Rio de Janeiro', 'Rio de Janeiro'),
+    ('Natal', 'Natal'),
+    ('Porto Alegre', 'Porto Alegre'),
+    ('Porto Velho', 'Porto Velho'),
+    ('Boa Vista', 'Boa Vista'),
+    ('Florianópolis', 'Florianópolis'),
+    ('São Paulo', 'São Paulo'),
+    ('Aracaju', 'Aracaju'),
+    ('Palmas', 'Palmas')
+)
+
+UF = (
+    ('AC', 'AC'),
+    ('AL', 'AL'),
+    ('AP', 'AP'),
+    ('AM', 'AM'),
+    ('BA', 'BA'),
+    ('CE', 'CE'),
+    ('DF', 'DF'),
+    ('ES', 'ES'),
+    ('GO', 'GO'),
+    ('MA', 'MA'),
+    ('MT', 'MT'),
+    ('MS', 'MS'),
+    ('MG', 'MG'),
+    ('PA', 'PA'),
+    ('PB', 'PB'),
+    ('PR', 'PR'),
+    ('PE', 'PE'),
+    ('PI', 'PI'),
+    ('RJ', 'RJ'),
+    ('RN', 'RN'),
+    ('RS', 'RS'),
+    ('RO', 'RO'),
+    ('RR', 'RR'),
+    ('SC', 'SC'),
+    ('SP', 'SP'),
+    ('SE', 'SE'),
+    ('TO', 'TO')
+)
+
+
 class Profile(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     address = models.CharField(max_length=100, blank=True)
-    city = models.CharField(max_length=100, blank=True)
-    state = models.CharField(max_length=100, blank=True)
-    country = models.CharField(max_length=100, blank=True)
+    city = models.CharField(max_length=100, blank=True, choices=CIDADE)
+    state = models.CharField(max_length=100, blank=True,choices=UF)
+    country = models.CharField(max_length=100, blank=True,default='Brasil')
 
     def __str__(self):
         return self.user.f_name
 
     def fulllocation(self):
         return f"{self.city}, {self.state}, {self.country}"
+
 

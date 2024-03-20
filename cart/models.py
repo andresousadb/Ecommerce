@@ -18,10 +18,13 @@ class CartItem(models.Model):
 
     def subtotal(self):
         if self.product.discount_price:
-                theprice = self.product.discount_price * self.quantity
-                return round(theprice, 2)
+            theprice = self.product.discount_price * self.quantity
+            subtotal_formatted = '{:,.2f}'.format(round(theprice, 2)).replace(',', 'x').replace('.', ',').replace('x', '.')
+
         else:
-            return self.product.price * self.quantity
+            subtotal_formatted = '{:,.2f}'.format(round(self.product.price * self.quantity, 2)).replace(',', 'x').replace('.', ',').replace('x', '.')
+
+        return subtotal_formatted
 
     def __str__(self):
         return f"{self.product}"
