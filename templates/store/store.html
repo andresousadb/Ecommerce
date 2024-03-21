@@ -3,34 +3,33 @@
 {% block content %}
 
 <!-- SECTION -->
-		<div class="section">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
-					<!-- ASIDE -->
-					<div id="aside" class="col-md-3">
-
-						<!-- aside Widget -->
-						<div class="aside">
-							<h3 class="aside-title">Preço</h3>
-							<div class="price-filter">
-								<div id="price-slider"></div>
-								<div class="input-number price-min">
-									<input id="price-min" type="number">
-									<span class="qty-up">+</span>
-									<span class="qty-down">-</span>
-								</div>
-								<span>-</span>
-								<div class="input-number price-max">
-									<input id="price-max" type="number">
-									<span class="qty-up">+</span>
-									<span class="qty-down">-</span>
-								</div>
+<div class="section">
+	<!-- container -->
+	<div class="container">
+		<!-- row -->
+		<div class="row">
+			<!-- ASIDE -->
+			<div id="aside" class="col-md-3">
+						<div class="container">
+							<!-- responsive-nav -->
+							<div id="responsive-nav">
+								<!-- NAV -->
+								<ul class="main-nav nav navbar-nav">
+									<li>
+										<h3 class="aside-title">Categorias</h3>
+										<ul class="category-list">
+											{% for catg in cat_links %}
+											<li>
+												<a class="categelems" href="{{ catg.get_url }}">{{ catg.name }}</a>
+											</li>
+											{% endfor %}
+										</ul>
+									</li>
+								</ul>
 							</div>
 						</div>
-						<!-- /aside Widget -->
-
+				<!-- /aside Widget -->
+					<nav id="navigation">
 						<!-- aside Widget -->
 						<div class="aside">
 							<h3 class="aside-title">Mais vendido</h3>
@@ -40,62 +39,42 @@
 									<img src="{{ product.product_image.url }}" alt="{{ product.alt_text }}">
 								</div>
 								<div class="product-body">
-									<p class="product-category">{{ product.category }}</p> 
+									<p class="product-category">{{ product.category }}</p>
 									<h3 class="product-name"><a href="{{ product.get_url}}">{{ product.name | truncatewords:"10" }}</a></h3>
-									<h4 class="product-price">{% if product.discount_price %} ${{ product.discount_price }} <del class="product-old-price">${{ product.price }}</del></h4>{% else %}<h4>${{ product.price }}</h4>{% endif %}
+									<h4 class="product-price">{% if product.discount_price %} R$ {{ product.discount_price }} <del class="product-old-price">R$ {{ product.price }}</del></h4>{% else %}<h4>R$ {{ product.price }}</h4>{% endif %}
 								    {% if product.stock < 1 %}
-									<h6 style="color:red;">out of stock</h6>
+									<h6 style="color:red;">fora de estoque</h6>
 									{% endif %}
 								</div>
 							</div>
-							{% endfor %}					
+							{% endfor %}
 						</div>
+					</nav>
 						<!-- /aside Widget -->
 					</div>
-					<!-- /ASIDE -->
-
+						<!-- /ASIDE -->
 					<!-- STORE -->
 					<div id="store" class="col-md-9">
-						<!-- store top filter -->
-						<div class="store-filter clearfix">
-							<div class="store-sort">
-								<label>
-									Ordenar por:
-									<select class="input-select">
-										<option value="#">Tendência</option>
-										<option value="#">Mais vendido</option>
-									</select>
-								</label>
-
-								
-							</div>
-							<ul class="store-grid">
-								<li class="active"><i class="fa fa-th"></i></li>
-								<li><a href="#"><i class="fa fa-th-list"></i></a></li>
-							</ul>
-						</div>
-						<!-- /store top filter -->
-
 						<!-- store products -->
 						<div class="row">
 							<!-- product -->
-							{% if products %}															
+							{% if products %}
 							{% for product in products %}
-							<div class="col-md-3">									
-								<div class="product">								
+							<div class="col-md-3">
+								<div class="product">
 									<div class="product-img">
 										<img src="{{ product.product_image.url }}" alt="{{ product.alt_text }}">
 										{% if product.discount_price > 0 %}
 												<div class="product-label">
 													<span class="sale">{{ product.discount_percentage }}%</span>
-													<span class="new">DISCOUNT</span>
+													<span class="new">Desconto</span>
 												</div>
 										{% endif %}
 									</div>
 									<div class="product-body">
-										<p class="product-category">{{ product.category }}</p> 
+										<p class="product-category">{{ product.category }}</p>
 										<h3 class="product-name"><a href="{{ product.get_url}}">{{ product.name | truncatewords:"10" }}</a></h3>
-										<h4 class="product-price">{% if product.discount_price %} ${{ product.discount_price }} <del class="product-old-price">${{ product.price }}</del></h4>{% else %}<h4>${{ product.price }}</h4>{% endif %}
+										<h4 class="product-price">{% if product.discount_price %} R$ {{ product.discount_price }} <del class="product-old-price">R$ {{ product.price }}</del></h4>{% else %}<h4>R$ {{ product.price }}</h4>{% endif %}
 										<div class="product-rating">
 											{% if single_product.average_rating == 1 %}
 														<i class="fa fa-star"></i>
@@ -124,25 +103,25 @@
 									</div>
 									{% if product.stock < 1 %}
 											<div class="add-to-cart">
-												<h6 style="color:red">out of stock</h6>
+												<h6 style="color:red">fora de estoque</h6>
 											</div>
 											{% else %}
 									<div class="add-to-cart">
-										<a href="{% url 'add_cart' product.id %}" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Carrinho</a>
+										<a href="{% url 'add_cart' product.id %}" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i>Carinho</a>
 									</div>
-									{% endif %}																
+									{% endif %}
 							    </div>
 							</div>
 							<!-- /product -->
 							{% endfor %}
 							{% else %}
 							<div>
-							<h4>No items found.</h4>
+							<h4>Nenhum item encontrado.</h4>
 							</div>
 							{% endif %}
 						</div>
 						<!-- /store products -->
-                            
+
 						<!-- store bottom filter -->
 						<div class="store-filter clearfix">
 
@@ -160,23 +139,23 @@
 
                                 {% endif %}
 
-                                {% for num in products.paginator.page_range %} 
+                                {% for num in products.paginator.page_range %}
 
 								  {% if products.number == num %}
 
 								      <li class="active">{{num}}</li>
-									
+
 								  {% else %}
-      
+
 	                                  <li><a href="?page={{num}}">{{num}}</a></li>
-								      
+
                                   {% endif %}
 
 								{% endfor %}
 
 								{% if products.has_next %}
 
-								
+
 								<li><a href="?page={{products.next_page_number}}"><i class="fa fa-angle-right"></i></a></li>
 
 								{% else%}

@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from category.models import Category
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
+from django.shortcuts import render
+from accounts.models import Profile,Account
 from .forms import ReviewForm
 from .models import Product, ProductGallery, ReviewRating
 from django.core.paginator import Paginator
@@ -33,6 +35,9 @@ def store(request, category_slug=None):
         product_count = products.count()
     return render(request, 'store/store.html', {'products': paged_products, 'product_count': product_count,
                                                 'topSelling_products': topSelling_products})
+
+
+
 
 
 def product_detail(request, category_slug, product_slug):
@@ -69,11 +74,9 @@ def search(request):
         if keyword:
             products = Product.objects.order_by('-created_at').filter(
                 Q(description__icontains=keyword) | Q(name__icontains=keyword))
+        else:
+            products = None
     return render(request, 'store/store.html', {'products': products})
-
-
-from django.shortcuts import render
-from accounts.models import Profile,Account
 
 
 @login_required
@@ -214,3 +217,5 @@ class PedidoPDFView(PDFTemplateView):
             pass
 
         return context
+
+

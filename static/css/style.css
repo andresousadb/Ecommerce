@@ -1887,6 +1887,10 @@ textarea.input {
 	color:red;
 }
 
+.category-list li {
+        margin-bottom: 10px; /* Você pode ajustar esse valor conforme necessário */
+    }
+
 .order-summary .order-col>div {
   display: table-cell;
   padding: 10px 0px;
