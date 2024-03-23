@@ -1,9 +1,5 @@
 from django.urls import path
 from . import views
-from store.views import PedidoPDFView
-
-
-
 
 
 urlpatterns = [
@@ -12,7 +8,5 @@ urlpatterns = [
     path('category/<slug:category_slug>/<slug:product_slug>/', views.product_detail, name='product_detail'),
     path('search/', views.search, name='search'),
     path('checkout/', views.checkout, name='checkout'),
-    path('submit_review/<int:product_id>', views.submit_review, name='submit_review'),
-    path('gerar_pedido_pdf/', PedidoPDFView.as_view(), name='gerar_pedido_pdf'),
-
+    path('submit_review/<int:product_id>', views.submit_review, name='submit_review')
 ]

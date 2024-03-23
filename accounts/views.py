@@ -1,35 +1,25 @@
-
-from django.shortcuts import render, redirect
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.template.loader import render_to_string
-from django.core.mail import EmailMessage
-from django.contrib.auth.tokens import default_token_generator
+import logging
+from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.contrib.auth.decorators import login_required
-from django.contrib.sites.shortcuts import get_current_site
 from django.contrib import messages, auth
 from .models import Account, Profile
-from.forms import RegistrationForm, UserForm, UserProfileForm 
-from cart.models import Cart, CartItem
+from.forms import RegistrationForm, UserForm, UserProfileForm
+from django.utils.html import strip_tags
+from cart.models import Cart,CartItem
 from cart.views import _cart_id
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.shortcuts import render
+from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
 from orders.models import Order, OrderProduct
 
 
-import logging
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
-from django.shortcuts import redirect
 
 logger = logging.getLogger(__name__)
-
-from django.contrib import messages
-
-from django.contrib import messages
-from django.utils.html import strip_tags
 
 
 def register(request):
@@ -189,18 +179,20 @@ def reset_password(request):
 
 @login_required
 def dashboard(request):
-    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
+    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id)
     orders_count = orders.count()
     context = {
         'orders_count': orders_count,
     }
     return render(request, 'accounts/dashboard.html', context)
 
-@login_required
-def my_orders(request):
-    orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
-    return render(request, 'accounts/my_orders.html', {'orders': orders})
 
+
+@login_required
+def my_orders(request, *args, **kwargs):
+    message = request.GET.get('message')  # Obtém a mensagem da consulta
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'accounts/my_orders.html', {'message': message, 'orders': orders})
 
 @login_required
 def edit_profile(request):
@@ -262,15 +254,34 @@ def order_detail(request, order_id):
     order = Order.objects.get(order_number=order_id)
     subtotal = 0
     for prod in order_detail:
-        subtotal += round((prod.product_price * prod.quantity), 2)  
+        subtotal += round((prod.product_price * prod.quantity), 2)
+        subtotal_formatted = '{:,.2f}'.format(subtotal).replace(',', 'x').replace('.', ',').replace('x', '.')
     context = {
         'order_detail': order_detail,
         'order': order,
-        'subtotal': subtotal,
+        'subtotal': subtotal_formatted,
     }
+    print(order_detail)
+
     return render(request, 'accounts/order_detail.html', context)
 
 
+
+def approve_order(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+    order.status = 'Aceito'
+    order.save()
+
+    # Acessar os itens do pedido associados ao pedido
+    order_products = OrderProduct.objects.filter(order=order)
+
+    # Descontar a quantidade de cada produto do estoque
+    for order_product in order_products:
+        product = order_product.product
+        product.stock -= order_product.quantity
+        product.save()
+
+    return redirect('/admin/orders/order/')
 
 
 

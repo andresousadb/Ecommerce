@@ -3,6 +3,8 @@ from django.urls import reverse
 from category.models import Category
 from accounts.models import Account
 from django.db.models import Avg
+
+
 class Product(models.Model):
     category = models.ForeignKey(Category, blank=True, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, unique=True)

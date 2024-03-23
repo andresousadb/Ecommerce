@@ -29,6 +29,7 @@ urlpatterns = [
     path('accounts/', include("accounts.urls")),
     path('newsletter/', include("newsletter.urls")),
     path('api/', include("api.urls")),
+    path('orders/', include('orders.urls')),
 
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

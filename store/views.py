@@ -1,9 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import get_user_model
 from category.models import Category
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
-from django.shortcuts import render
 from accounts.models import Profile,Account
 from .forms import ReviewForm
 from .models import Product, ProductGallery, ReviewRating
@@ -12,7 +10,16 @@ from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from easy_pdf.views import PDFTemplateView
+from django.utils import timezone
+from django.views.generic import View
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from orders.models import Order
+from django.utils.decorators import method_decorator
+from django.urls import reverse
+
+
 
 
 def store(request, category_slug=None):
@@ -35,9 +42,6 @@ def store(request, category_slug=None):
         product_count = products.count()
     return render(request, 'store/store.html', {'products': paged_products, 'product_count': product_count,
                                                 'topSelling_products': topSelling_products})
-
-
-
 
 
 def product_detail(request, category_slug, product_slug):
@@ -105,15 +109,16 @@ def checkout(request, total=0, quantity=0, cart_items=None):
             total += round((item.product.price * item.quantity), 2)
             quantity += item.quantity
 
-        # Removendo taxas e custo de envio por enquanto
-        # tax = round(((2 * total) / 100), 2)  # Taxa definida como 2% como exemplo
-        # grand_total = round((total + tax + shipping_price), 2)
-        grand_total = round(total, 2)
-        # Arredondando o total para 2 casas decimais
-        grand_total = round(total, 2)
+            # Calcular o total do carrinho
+            if item.product.discount_price:
+                grand_total += item.product.discount_price * item.quantity
+            else:
+                grand_total += item.product.price * item.quantity
 
-        # Formatando o total para exibir com separadores de milhares e duas casas decimais
+        # Formatando o total do carrinho
+        grand_total = round(grand_total, 2)
         grand_total_formatted = '{:,.2f}'.format(grand_total).replace(',', 'x').replace('.', ',').replace('x', '.')
+
 
     except ObjectDoesNotExist:
         pass
@@ -160,62 +165,151 @@ def submit_review(request, product_id):
                 return redirect(url)
 
 
-class PedidoPDFView(PDFTemplateView):
-    template_name = 'store/pedido_pdf.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
 
-        try:
-            grand_total = 0
+# class PedidoPDFView(PDFTemplateView):
+#     template_name = 'store/pedido_pdf.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#
+#         try:
+#             grand_total = 0
+#
+#             # Obter os itens do carrinho
+#             if self.request.user.is_authenticated:
+#                 cart_items = CartItem.objects.filter(user=self.request.user, is_active=True)
+#             else:
+#                 cart = Cart.objects.get(cart_id=_cart_id(self.request))
+#                 cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+#
+#             cart_items_data = []
+#             for item in cart_items:
+#                 cart_item_data = {
+#                     'product': item.product,
+#                     'quantity': item.quantity,
+#                     'subtotal': item.subtotal,
+#                 }
+#                 cart_items_data.append(cart_item_data)
+#
+#                 # Calcular o total do carrinho
+#                 if item.product.discount_price:
+#                     grand_total += item.product.discount_price * item.quantity
+#                 else:
+#                     grand_total += item.product.price * item.quantity
+#
+#             # Formatando o total do carrinho
+#             grand_total = round(grand_total, 2)
+#             grand_total_formatted = '{:,.2f}'.format(grand_total).replace(',', 'x').replace('.', ',').replace('x', '.')
+#
+#             # Adicionar os dados do carrinho ao contexto
+#             context['cart_items'] = cart_items_data
+#             context['grand_total'] = grand_total_formatted
+#
+#             # Adicionar os dados do perfil do usuário ao contexto
+#             if self.request.user.is_authenticated:
+#                 try:
+#                     user = Account.objects.get(id=self.request.user.id)
+#                     user_profile = Profile.objects.get(user=user)
+#                     city = user_profile.city
+#                 except Profile.DoesNotExist:
+#                     city = None
+#             else:
+#                 city = None
+#
+#             context['city'] = city
+#             context['pdf'] = user
+#
+#         except ObjectDoesNotExist:
+#             pass
+#
+#         return context
 
-            # Obter os itens do carrinho
-            if self.request.user.is_authenticated:
-                cart_items = CartItem.objects.filter(user=self.request.user, is_active=True)
-            else:
-                cart = Cart.objects.get(cart_id=_cart_id(self.request))
-                cart_items = CartItem.objects.filter(cart=cart, is_active=True)
 
-            cart_items_data = []
-            for item in cart_items:
-                cart_item_data = {
-                    'product': item.product,
-                    'quantity': item.quantity,
-                    'subtotal': item.subtotal,
-                }
-                cart_items_data.append(cart_item_data)
-
-                # Calcular o total do carrinho
-                if item.product.discount_price:
-                    grand_total += item.product.discount_price * item.quantity
-                else:
-                    grand_total += item.product.price * item.quantity
-
-            # Formatando o total do carrinho
-            grand_total = round(grand_total, 2)
-            grand_total_formatted = '{:,.2f}'.format(grand_total).replace(',', 'x').replace('.', ',').replace('x', '.')
-
-            # Adicionar os dados do carrinho ao contexto
-            context['cart_items'] = cart_items_data
-            context['grand_total'] = grand_total_formatted
-
-            # Adicionar os dados do perfil do usuário ao contexto
-            if self.request.user.is_authenticated:
-                try:
-                    user = Account.objects.get(id=self.request.user.id)
-                    user_profile = Profile.objects.get(user=user)
-                    city = user_profile.city
-                except Profile.DoesNotExist:
-                    city = None
-            else:
-                city = None
-
-            context['city'] = city
-            context['pdf'] = user
-
-        except ObjectDoesNotExist:
-            pass
-
-        return context
-
+# @method_decorator(login_required, name='dispatch')
+# class place_order(View):
+#     def post(self, request, *args, **kwargs):
+#         try:
+#             grand_total = 0
+#
+#             # Obter os itens do carrinho
+#             if self.request.user.is_authenticated:
+#                 cart_items = CartItem.objects.filter(user=self.request.user, is_active=True)
+#             else:
+#                 cart = Cart.objects.get(cart_id=_cart_id(self.request))
+#                 cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+#
+#             cart_items_data = []
+#             for item in cart_items:
+#                 cart_item_data = {
+#                     'product': item.product,
+#                     'quantity': item.quantity,
+#                     'subtotal': item.subtotal,
+#                 }
+#                 cart_items_data.append(cart_item_data)
+#
+#                 # Calcular o total do carrinho
+#                 if item.product.discount_price:
+#                     grand_total += item.product.discount_price * item.quantity
+#                 else:
+#                     grand_total += item.product.price * item.quantity
+#
+#             # Formatando o total do carrinho
+#             grand_total = round(grand_total, 2)
+#             grand_total_formatted = '{:,.2f}'.format(grand_total).replace(',', 'x').replace('.', ',').replace('x', '.')
+#
+#             new_order = Order.objects.create(
+#                 user=self.request.user if self.request.user.is_authenticated else None,
+#                 f_name=request.POST.get('f_name', ''),
+#                 l_name=request.POST.get('l_name', ''),
+#                 email=request.POST.get('email', ''),
+#                 tel=request.POST.get('tel', ''),
+#                 city=request.POST.get('city', ''),
+#                 order_total=grand_total,
+#                 status = 'Orçamento',
+#                 ip = request.META.get('REMOTE_ADDR'),
+#                 created_at=timezone.now(),
+#                 updated_at=timezone.now(),
+#             )
+#
+#             # Atualize o número do pedido com base no ID do pedido recém-criado
+#             new_order.order_number = timezone.now().strftime('%Y%m%d') + str(new_order.id)
+#             new_order.save()
+#
+#             # Limpar o carrinho após gerar o pedido
+#             if self.request.user.is_authenticated:
+#                 CartItem.objects.filter(user=self.request.user, is_active=True).delete()
+#             else:
+#                 CartItem.objects.filter(cart=cart, is_active=True).delete()
+#
+#             # Adicionar os dados do usuário e da cidade ao contexto
+#             if self.request.user.is_authenticated:
+#                 try:
+#                     user = Account.objects.get(id=self.request.user.id)
+#                     user_profile = Profile.objects.get(user=user)
+#                     city = user_profile.city
+#                 except Profile.DoesNotExist:
+#                     city = None
+#             else:
+#                 city = None
+#
+#             context = {
+#                 'cart_items': cart_items_data,
+#                 'grand_total': grand_total_formatted,
+#                 'pdf': new_order,  # Adicionar a instância de Order ao contexto
+#                 'city': city,
+#                 'user': user
+#             }
+#
+#             # Adicione uma mensagem de sucesso
+#             message = "Pedido realizado com sucesso!"
+#
+#             # Obtenha a URL da view 'my_orders'
+#             my_orders_url = reverse('my_orders')
+#
+#             # Redirecione para a URL de 'my_orders' com a mensagem como parâmetro de consulta
+#             return redirect(f'{my_orders_url}?message={message}')
+#
+#         except ObjectDoesNotExist:
+#             return HttpResponse("Erro ao processar o pedido. Por favor, tente novamente.")  # Retorna uma resposta de erro
 

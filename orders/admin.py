@@ -1,5 +1,8 @@
+from .models import  Order, OrderProduct
 from django.contrib import admin
-from .models import Payment, Order, OrderProduct 
+from django.urls import reverse
+from django.utils.html import format_html
+
 
 
 class OrderProductInline(admin.TabularInline):
@@ -7,12 +10,15 @@ class OrderProductInline(admin.TabularInline):
     readonly_fields = ('payment', 'user', 'product_price', 'quantity', 'ordered')
     extra = 0
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['full_name', 'email', 'tel', 'thecountry', 'order_number', 'order_total', 'tax', 'status', 'created_at', 'updated_at']
-    list_filter = ['status', 'is_ordered']
-    search_fields = ['order_number', 'f_name', 'l_name', 'email', 'tel']
-    list_per_page = 20
-    inlines = [OrderProductInline]
+    list_display = ('order_number', 'full_name', 'tel', 'email', 'order_total', 'created_at', 'status', 'approve_button')
 
-admin.site.register(Payment)
+    def approve_button(self, obj):
+        if obj.status == 'Orçamento':
+            return format_html('<a href="{}">Aprovar</a>', reverse('approve_order', args=[obj.pk]))
+        return 'Aprovado'
+    approve_button.short_description = 'Aprovação'
+
+
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderProduct)
+

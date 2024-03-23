@@ -2174,3 +2174,18 @@ textarea.input {
     margin-top: 10px;
   }
 }
+
+.bg-success {
+    background-color: #28a745; /* verde */
+    color: #fff; /* texto branco */
+}
+
+.bg-danger {
+    background-color: #dc3545; /* vermelho */
+    color: #fff; /* texto branco */
+}
+
+.bg-info {
+    background-color: #007bff; /* azul */
+    color: #fff; /* texto branco */
+}

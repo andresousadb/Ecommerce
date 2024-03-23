@@ -16,16 +16,23 @@
                         <h3 class="title">Dados Cliente</h3>
                     </div>
                     <div class="form-group">
-                        <input class="input" type="text" name="f_name" placeholder="Nome" value="{{ user_chek.f_name }}" readonly>
+                        <input class="input" type="text" name="f_name" placeholder="Nome" value="{{ user_chek.f_name }}"
+                               readonly>
                     </div>
                     <div class="form-group">
-                        <input class="input" type="text" name="l_name" placeholder="Sobrenome" value="{{ user_chek.l_name }}"readonly>
+                        <input class="input" type="text" name="l_name" placeholder="Sobrenome"
+                               value="{{ user_chek.l_name }}" readonly>
                     </div>
                     <div class="form-group">
-                        <input class="input" type="tel" name="tel" placeholder="Telefone" value="{{ user_chek.tel }}"readonly>
+                        <input class="input" type="tel" name="tel" placeholder="Telefone" value="{{ user_chek.tel }}"
+                               readonly>
                     </div>
                     <div class="form-group">
-                        <input class="input" type="text" name="city" placeholder="cidade" value="{{ city }}"readonly>
+                        <input class="input" type="text" name="city" placeholder="cidade" value="{{ city }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <input class="input" type="text" name="email" placeholder="email" value="{{ user_chek.email }}"
+                               readonly>
                     </div>
                 </div>
                 <!-- /Billing Details -->
@@ -33,7 +40,7 @@
             <!-- Order Details -->
             <div class="col-md-5 order-details">
                 <div class="section-title text-center">
-                    <h3 class="title">Seu pedido</h3>
+                    <h3 class="title">Seu orçamento</h3>
                 </div>
                 <div class="order-summary">
                     <div class="order-col">
@@ -54,11 +61,34 @@
                     </div>
                 </div>
 
-                <a href="{% url 'gerar_pedido_pdf' %}" style="background-color:black;color:#ff0000" class="primary-btn order-submit" target="_blank">Gerar Pedido</a>
+                <form id="pedidoForm" method="post" action="{% url 'orders:gerar_orcamento' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="f_name" value="{{ user_chek.f_name }}">
+                    <input type="hidden" name="l_name" value="{{ user_chek.l_name }}">
+                    <input type="hidden" name="tel" value="{{ user_chek.tel }}">
+                    <input type="hidden" name="email" value="{{ user_chek.email }}">
+                    <input type="hidden" name="city" value="{{ city }}">
+                    <input type="hidden" name="order_total" value="{{ grand_total }}">
+                    <button type="submit" class="primary-btn order-submit btn-lg"
+                            style="background-color:black;color:#ff0000; padding: 10px 112px; font-size: 18px;">Gerar
+                        Orçamento
+                    </button>
+                </form>
+                <script>
+                    function openPdfWindow() {
+                        // Submeter o formulário
+                        document.getElementById("pedidoForm").submit();
+
+                        // Redirecionar a página atual de volta para o menu inicial
+                        window.location.href = '{% url "store" %}';
+                    }
+                </script>
+
 
                 <!--                <a href="https://wa.me/+5561995020150?text=Olá,%20gostaria%20de%20fazer%20um%20pedido.%20Por%20favor,%20veja%20o%20PDF%20com%20as%20informações%20do%20pedido:%0A%0Afile:///caminho/para/seu/arquivo/pedido.pdf"-->
                 <!--                   class="primary-btn order-submit btn-block" style="background-color:black;color:#ff0000;">Pedido pelo Whatsapp</a>-->
-                <a href="{% url 'store' %}" class="primary-btn order-submit" style="background-color:black;color:#ff0000;">Continue Comprando</a>
+                <a href="{% url 'store' %}" class="primary-btn order-submit"
+                   style="background-color:black;color:#ff0000;">Continue Comprando</a>
             </div>
             <!-- /Order Details -->
         </div>

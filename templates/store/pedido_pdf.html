@@ -34,8 +34,8 @@
 <body>
     {% if city %}
     <h1>Dados do Cliente</h1>
-    <h2>Nome: {{ pdf.f_name }} {{ pdf.l_name }}</h2>
-     <h2>Telefone: {{ pdf.tel }} </h2>
+    <h2>Nome: {{ user.f_name }} {{ user.l_name }}</h2>
+     <h2>Telefone: {{ user.tel }} </h2>
      <h2>Cidade: {{ city }}</h2>
     {% else %}
     <p>Dados do Cliente não disponíveis.</p>
