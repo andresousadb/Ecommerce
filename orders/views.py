@@ -16,6 +16,7 @@ from django.http import HttpResponse
 from .models import Order
 from django.utils.decorators import method_decorator
 from django.urls import reverse
+from decimal import Decimal
 
 
 @method_decorator(login_required, name='dispatch')
@@ -68,20 +69,37 @@ class place_order(View):
             new_order.order_number = timezone.now().strftime('%Y%m%d') + str(new_order.id)
             new_order.save()
 
-            # Salvar dados na tabela OrderProduct
+
+            # Inicialize o grand_total fora do loop
+            grand_total = Decimal('0')
+
+            # Itere sobre os itens do carrinho
             for item in cart_items:
+                if item.product.discount_price:
+                    product_price = item.product.discount_price
+                else:
+                    product_price = item.product.price
+
+                # Calcule o preço total do item (product_price * quantidade)
+                total_price_for_item = product_price * item.quantity
+
+                # Adicione o preço total do item ao grand_total
+                grand_total += total_price_for_item
+
+                # Salve os dados na tabela OrderProduct
                 order_product = OrderProduct.objects.create(
                     order=new_order,
                     user=request.user,
                     product=item.product,
                     quantity=item.quantity,
-                    product_price=item.product.price,
+                    product_price=total_price_for_item,  # Use o preço total do item como product_price
                     ordered=True
                 )
 
                 # Atualizar o estoque do produto
                 item.product.stock -= item.quantity
                 item.product.save()
+
 
             # Limpar o carrinho após gerar o pedido
             if self.request.user.is_authenticated:
@@ -120,66 +138,3 @@ class place_order(View):
         except ObjectDoesNotExist:
             return HttpResponse("Erro ao processar o pedido. Por favor, tente novamente.")  # Retorna uma resposta de erro
 
-
-
-
-# def OrderProduct(request):
-#     order = Order.objects.get(user=request.user, is_ordered=False)
-#     cart_items = CartItem.objects.filter(user=request.user)
-#     for item in cart_items:
-#         orderproduct = OrderProduct()
-#         orderproduct.order_id = order.id
-#         orderproduct.user_id = request.user.id
-#         orderproduct.product_id = item.product_id
-#         orderproduct.quantity = item.quantity
-#         orderproduct.product_price = item.product.price
-#         orderproduct.ordered = True
-#         orderproduct.save()
-#
-#         product = Product.objects.get(id=item.product_id)
-#         product.stock -= item.quantity
-#         product.save()
-#
-#     CartItem.objects.filter(user=request.user).delete()
-#
-#     subject = 'Account activation'
-#     body = render_to_string('orders/order_received_email.html', {
-#         'user': request.user,
-#         'order': order,
-#     })
-#     to_email = request.user.email
-#     send_email = EmailMessage(subject, body, to=[to_email])
-#
-#     data = {
-#         'order_number': order.order_number
-#     }
-#
-#     return JsonResponse(data)
-#
-
-
-
-# def order_completed(request):
-#     order_number = request.GET.get('order_number')
-#     transactionID = request.GET.get('payment_id')
-#     payment = Payment.objects.get(payment_id=transactionID)
-#     try:
-#         order = Order.objects.get(order_number=order_number, is_ordered=True)
-#         ordered_products = OrderProduct.objects.filter(order_id=order.id)
-#         subtotal = 0
-#         for prod in ordered_products:
-#             subtotal += (prod.product_price * prod.quantity)
-#
-#         context = {
-#             'order': order,
-#             'ordered_products': ordered_products,
-#             'ordder_number': order.order_number,
-#             'transactionID': payment.payment_id,
-#             'payment': payment,
-#             'subtotal': subtotal,
-#         }
-#         return render(request, 'orders/order_completed.html', context)
-#
-#     except (Payment.DoesNotExist, Order.DoesNotExist):
-#         return redirect('index')
-#

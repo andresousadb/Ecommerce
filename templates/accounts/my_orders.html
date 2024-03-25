@@ -27,10 +27,9 @@
                                         <thead>
                                         <tr>
                                             <th scope="col">Pedidos#</th>
-                                            <th scope="col">Nome Cliente</th>
+                                            <th scope="col">Cliente</th>
                                             <th scope="col">Telefone</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Total de pedidos</th>
+                                            <th scope="col">Total</th>
                                             <th scope="col">Data</th>
                                             <th scope="col">Status Pedido</th>
                                         </tr>
@@ -39,21 +38,15 @@
                                         {% for order in orders %}
                                             <tr class="{% if order.status == 'Aceito' %}bg-success{% elif order.status == 'Cancelado' %}bg-danger{% elif order.status == 'Orçamento' %}bg-info{% endif %}">
                                                 <th scope="row">
-                                                    {% if order.status == 'Aceito' %}
                                                         <a href="{% url 'order_detail' order.order_number %}">{{ order.order_number }}</a>
-                                                    {% else %}
-                                                        {{ order.order_number }}
-                                                    {% endif %}
                                                 </th>
                                                 <td>{{ order.full_name }}</td>
                                                 <td>{{ order.tel }}</td>
-                                                <td>{{ order.email }}</td>
-                                                <td>R$ {{ order.order_total }}</td>
+                                                <td>R$ {{ order.order_total|floatformat:2 }}</td>
                                                 <td>{{ order.created_at|date:"d/m/Y" }}</td>
                                                 <td>{{ order.status }}</td>
                                             </tr>
                                             {% endfor %}
-
                                         </tbody>
                                     </table>
                                 </div>

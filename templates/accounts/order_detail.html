@@ -14,7 +14,7 @@
                         <!-- Start .row -->
                         <div class="col-lg-6">
                             <!-- col-lg-6 start here -->
-                            <div class="invoice-logo"><img src="{% static 'img/logo.svg' %}" alt="GordeGames-logo" style="max-height: 40px;"></div>
+                            <div class="invoice-logo"><img src="{% static 'img/logo.png' %}" alt="GordeGames-logo" style="max-height: 40px;margin-top: -5px"></div>
                         </div>
                         <!-- col-lg-6 end here -->
                         <div class="col-lg-6">
@@ -34,8 +34,8 @@
                                 <div class="well">
                                     <ul class="list-unstyled mb0">
                                         <li><strong>Pedido: </strong> {{order.order_number}}</li>
-                                        <li><strong>Data do pedido: </strong> {{order.created_at}}</li>
-                                        <li><strong>Status: </strong> {{order.status}}</li>
+                                        <li><strong>Data do pedido: </strong> {{ order.created_at|date:'d/m/Y' }}</li>
+                                        <li><strong>Status pedido: </strong> {{order.status}}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -51,23 +51,18 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                            {% for item in order_detail %}
+                                                             {% for item, price in order_detail %}
                                                             <tr>
                                                                 <td class="text-center">{{ item.product.name }}</td>
                                                                 <td class="text-center">{{ item.quantity }}</td>
-                                                                <td class="text-center">R${{ item.product_price }}</td>
+                                                                <td class="text-center">R${{ price}}</td>
                                                             </tr>
                                                             {% endfor %}
                                                         </tbody>
-
                                                         <tfoot>
                                                             <tr>
-                                                                <th colspan="2" class="text-right">Subtotal:</th>
-                                                                <th class="text-center">R${{ subtotal }}</th>
-                                                            </tr>
-                                                            <tr>
-                                                                <th colspan="2" class="text-right">Total Geral:</th>
-                                                                <th class="text-center">R${{ order.order_total }}</th>
+                                                                <th colspan="2" class="text-right">Total</th>
+                                                                <th class="text-center">R${{ total_formatado }}</th>
                                                             </tr>
                                                         </tfoot>
 
@@ -76,6 +71,10 @@
                             </div>
                             <div class="invoice-footer mt25">
                                 <p class="text-center">Obrigado por comprar conosco!</p>
+                                 {% if order.status == 'Aceito' %}
+                                <a href="https://wa.me/+5561995020150?text=Olá, me chamo {{order.full_name}} e %20gostaria%20de%20fazer%20 o %20pedido de número: {{ order.order_number }}"
+                                   class="primary-btn order-submit btn-block" style="background-color:black;color:#0ae72d;">Pedido pelo Whatsapp</a>
+                                  {% endif %}
                             </div>
                         </div>
                         <!-- col-lg-12 end here -->

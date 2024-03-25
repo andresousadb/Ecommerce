@@ -11,13 +11,13 @@
 					<ul class="header-links pull-right" style="margin-right:3em;">
 						<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-user-o"></i> Minha Conta</a>
-						<ul class="dropdown-menu" style="background-color:black; color:red;">
+						<ul class="dropdown-menu" style="background-color:black; ">
 						{% if user.is_authenticated %}
-						<li><a href="{% url 'edit_profile' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='red'" onMouseOut="this.style.color='white'">Painel</a></li>
-						<li><a href="{% url 'logout' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='red'" onMouseOut="this.style.color='white'">Sair</a></li>
+						<li><a href="{% url 'edit_profile' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='#00d7b8'" onMouseOut="this.style.color='white'">Painel</a></li>
+						<li><a href="{% url 'logout' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='#00d7b8'" onMouseOut="this.style.color='white'">Sair</a></li>
 						{% else %}
-						<li><a href="{% url 'login' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='red'" onMouseOut="this.style.color='white'">Login</a></li>
-						<li><a href="{% url 'register' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='red'" onMouseOut="this.style.color='white'">Registro</a></li>
+						<li><a href="{% url 'login' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='#00d7b8'" onMouseOut="this.style.color='white'">Login</a></li>
+						<li><a href="{% url 'register' %}" style="background-color:black; color:white;" onMouseOver="this.style.color='#00d7b8'" onMouseOut="this.style.color='white'">Registro</a></li>
 						{% endif %}
 						</ul>
 					</li>
@@ -36,7 +36,9 @@
 						<div class="col-md-3">
 							<div class="header-logo">
 								<a href="{% url 'index' %}" class="logo">
-									<h5 style="color: #ffffff; margin-top: 2em;" onMouseOver="this.style.color='white'" onMouseOut="this.style.color='red'"><i class="fa fa-signal" aria-hidden="true"></i> GordeGames® - Eletrônicos</h5>
+									<h5 style="font-size: 16px; margin-top: 1.5em; background-image: linear-gradient(to right, #00d468,#00d2e9 ); -webkit-background-clip: text; color: transparent;">
+									<i class="fa fa-signal" aria-hidden="true"></i> Gorde Games® - Eletrônicos
+								</h5>
 								</a>
 							</div>
 						</div>

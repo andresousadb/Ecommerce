@@ -70,7 +70,7 @@
                     <input type="hidden" name="city" value="{{ city }}">
                     <input type="hidden" name="order_total" value="{{ grand_total }}">
                     <button type="submit" class="primary-btn order-submit btn-lg"
-                            style="background-color:black;color:#ff0000; padding: 10px 112px; font-size: 18px;">Gerar
+                            style="background-color:black;color:#00d7b8; padding: 10px 112px; font-size: 18px;">Gerar
                         Orçamento
                     </button>
                 </form>
@@ -83,12 +83,8 @@
                         window.location.href = '{% url "store" %}';
                     }
                 </script>
-
-
-                <!--                <a href="https://wa.me/+5561995020150?text=Olá,%20gostaria%20de%20fazer%20um%20pedido.%20Por%20favor,%20veja%20o%20PDF%20com%20as%20informações%20do%20pedido:%0A%0Afile:///caminho/para/seu/arquivo/pedido.pdf"-->
-                <!--                   class="primary-btn order-submit btn-block" style="background-color:black;color:#ff0000;">Pedido pelo Whatsapp</a>-->
                 <a href="{% url 'store' %}" class="primary-btn order-submit"
-                   style="background-color:black;color:#ff0000;">Continue Comprando</a>
+                   style="background-color:black;color:#00d7b8;">Continue Comprando</a>
             </div>
             <!-- /Order Details -->
         </div>

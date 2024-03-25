@@ -187,13 +187,6 @@ def dashboard(request):
     return render(request, 'accounts/dashboard.html', context)
 
 
-
-@login_required
-def my_orders(request, *args, **kwargs):
-    message = request.GET.get('message')  # Obtém a mensagem da consulta
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'accounts/my_orders.html', {'message': message, 'orders': orders})
-
 @login_required
 def edit_profile(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
@@ -246,24 +239,37 @@ def change_password(request):
     return render(request, 'accounts/change_password.html')
 
 
-
+@login_required
+def my_orders(request, *args, **kwargs):
+    message = request.GET.get('message')  # Obtém a mensagem da consulta
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'accounts/my_orders.html', {'message': message, 'orders': orders})
 
 @login_required
 def order_detail(request, order_id):
     order_detail = OrderProduct.objects.filter(order__order_number=order_id)
     order = Order.objects.get(order_number=order_id)
-    subtotal = 0
+    total = order.order_total
+    total_formatted = '{:,.2f}'.format(total).replace(',', 'x').replace('.', ',').replace('x', '.')
+
+    # Criar uma lista para armazenar pares de produto e preço formatado
+    products_with_price = []
+
     for prod in order_detail:
-        subtotal += round((prod.product_price * prod.quantity), 2)
-        subtotal_formatted = '{:,.2f}'.format(subtotal).replace(',', 'x').replace('.', ',').replace('x', '.')
+        price_pro = prod.product_price
+        price_pro_formatted = '{:,.2f}'.format(price_pro).replace(',', 'x').replace('.', ',').replace('x', '.')
+        products_with_price.append((prod, price_pro_formatted))
+
     context = {
-        'order_detail': order_detail,
+        'order_detail': products_with_price,
         'order': order,
-        'subtotal': subtotal_formatted,
+        'total_formatado': total_formatted,
     }
-    print(order_detail)
 
     return render(request, 'accounts/order_detail.html', context)
+
+
+
 
 
 

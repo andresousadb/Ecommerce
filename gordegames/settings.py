@@ -1,6 +1,9 @@
 from pathlib import Path
 import os
 from decouple import config
+import dj_database_url
+
+DATABASE_URL = "PGPASSWORD=fFDTnykDFEnVRMlpfyTAbVQPRHXnWACp psql -h viaduct.proxy.rlwy.net -U postgres -p 14737 -d railway"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,6 +12,8 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['*']
+
+
 
 
 # Application definition
@@ -29,7 +34,6 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'api',
-    'newsletter',
     'admin_honeypot',
     'django_filters',
 ]
@@ -82,20 +86,24 @@ WSGI_APPLICATION = 'gordegames.wsgi.application'
 
 AUTH_USER_MODEL ='accounts.Account'
 
+DATABASES = {
+    "default": dj_database_url.config(default=DATABASE_URL,conn_max_age=1800),
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecommerce",
-        "USER": "user_admin",
-        "PASSWORD": "user_admin@2024",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecommerce",
+#         "USER": "user_admin",
+#         "PASSWORD": "user_admin@2024",
+#         "HOST": "localhost",
+#         "PORT": "5432",
+#     }
+# }
 
 
 # Password validation
@@ -120,9 +128,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 
@@ -130,6 +138,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -142,6 +153,10 @@ MEDIA_ROOT = BASE_DIR
 
 LOGIN_URL = '/login'
 
+#formatar valores
+THOUSAND_SEPARATOR = '.',
+USE_THOUSAND_SEPARATOR = True
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -152,7 +167,6 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
@@ -160,59 +174,3 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
-
-# for AWS Elastic Beanstalk Deploy
-
-# After added DB credentials, while local venv is activated run python manage.py makemigrations
-
-# Then git add -A and git commit
-
-# In project root directory, create a folder called .ebextensions, inside it create a file called django.config and add
-
-# option_settings:
-  # aws:elasticbeanstalk:application:environment:
-    # DJANGO_SETTINGS_MODULE: "mytech.settings"
-    # PYTHONPATH: "/var/app/current:$PYTHONPATH"
-  # aws:elasticbeanstalk:container:python:
-    # WSGIPath: "mytech.wsgi:application"
-# container_commands:
-  # 01_migrate:
-    # command: "source /var/app/venv/*/bin/activate && python3 manage.py migrate --noinput"
-    # leader_only: true
-  # 02_collectstatic:
-    # command: "source /var/app/venv/*/bin/activate && python3 manage.py collectstatic --noinput"
-    # leader_only: true
-
-# Inside project directory, create a file storage_backends.py and add the following
-
-# from django.conf import settings
-# from storages.backends.s3boto3 import S3Boto3Storage
-
-# class StaticStorage(S3Boto3Storage):
-    # location = 'static'
-    # default_acl = 'public-read'
-
-
-# class PublicMediaStorage(S3Boto3Storage):
-    # location = 'media'
-    # default_acl = 'public-read'
-    # file_overwrite = False
-    
-# In settings.py, add the following, to use additional S3 Bucket as staticfiles storage independently from the default 
-# Elastic Beanstalk S3 bucket
-
-# AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-# AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-# AWS_DEFAULT_ACL = None
-# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-# AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-# s3 static settings
-# STATIC_LOCATION = 'static'
-# STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
-# STATICFILES_STORAGE = 'mytech.storage_backends.StaticStorage'
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, STATIC_LOCATION),)
-# s3 public media settings
-# PUBLIC_MEDIA_LOCATION = 'media'
-# MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
-# DEFAULT_FILE_STORAGE = 'mytech.storage_backends.PublicMediaStorage'

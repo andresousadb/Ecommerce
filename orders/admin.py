@@ -7,7 +7,7 @@ from django.utils.html import format_html
 
 class OrderProductInline(admin.TabularInline):
     model = OrderProduct
-    readonly_fields = ('payment', 'user', 'product_price', 'quantity', 'ordered')
+    readonly_fields = ('user', 'product_price', 'quantity', 'ordered')
     extra = 0
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_number', 'full_name', 'tel', 'email', 'order_total', 'created_at', 'status', 'approve_button')
