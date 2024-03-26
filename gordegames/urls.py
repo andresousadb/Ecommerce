@@ -21,7 +21,6 @@ from . import views
 
 
 urlpatterns = [
-    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('store/', include("store.urls")),
