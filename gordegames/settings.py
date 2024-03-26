@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from decouple import config
+import dj_database_url
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -89,17 +90,9 @@ AUTH_USER_MODEL ='accounts.Account'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecommerce",
-        "USER": "user_admin",
-        "PASSWORD": "user_admin@2024",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
-}
-
+# Configuração do banco de dados no Heroku
+db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
+DATABASES = {'default': db_from_env}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
