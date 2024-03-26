@@ -96,9 +96,9 @@ class place_order(View):
                     ordered=True
                 )
 
-                # Atualizar o estoque do produto
-                item.product.stock -= item.quantity
-                item.product.save()
+                # # Atualizar o estoque do produto
+                # item.product.stock -= item.quantity
+                # item.product.save()
 
 
             # Limpar o carrinho após gerar o pedido

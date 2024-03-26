@@ -314,11 +314,32 @@ def approve_order(request, order_id):
     # Descontar a quantidade de cada produto do estoque
     for order_product in order_products:
         product = order_product.product
-        product.stock -= order_product.quantity
-        product.save()
+        if order.status == 'Aceito':
+            product.stock -= order_product.quantity
+            product.save()
 
     return redirect('/admin/orders/order/')
 
+
+def cancelar_order(request, order_id):
+    order = get_object_or_404(Order, pk=order_id)
+
+    # Verifica se o status atual do pedido é "Aprovado"
+    if order.status == 'Aceito':
+        # Acessar os itens do pedido associados ao pedido
+        order_products = OrderProduct.objects.filter(order=order)
+
+        for order_product in order_products:
+            product = order_product.product
+            # Ajusta o estoque do produto
+            product.stock += order_product.quantity
+            product.save()
+
+    # Altera o status do pedido para "Cancelado"
+    order.status = 'Cancelado'
+    order.save()
+
+    return redirect('/admin/orders/order/')
 
 
 

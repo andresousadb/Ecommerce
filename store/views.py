@@ -95,9 +95,7 @@ def search(request):
 @login_required
 def checkout(request, total=0, quantity=0, cart_items=None):
     try:
-        tax = 0
         grand_total = 0
-        shipping_price = 20  # Preço de envio definido como $20 como exemplo, deve ser desenvolvido para calcular km ou milhas
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(user=request.user, is_active=True)
 
@@ -137,10 +135,8 @@ def checkout(request, total=0, quantity=0, cart_items=None):
         "quantity": quantity,
         "cart_items": cart_items,
         "city": city,  # Adicionando a cidade ao contexto
-        # "tax": tax,
         "grand_total": grand_total_formatted,
-        "user_chek" : user,
-        # "shipping_price": shipping_price,
+        "user_chek": user,
     }
 
     return render(request, 'store/checkout.html', context)
