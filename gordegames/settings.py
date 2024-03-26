@@ -140,6 +140,8 @@ LOCALE_PATHS = [
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+# Desativa o coletor estático no Heroku
+DISABLE_COLLECTSTATIC = os.environ.get('DISABLE_COLLECTSTATIC', '') == '1'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
