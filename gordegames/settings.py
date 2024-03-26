@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 from decouple import config
-import dj_database_url
+
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -90,9 +90,18 @@ AUTH_USER_MODEL ='accounts.Account'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# Configuração do banco de dados no Heroku
-db_from_env = dj_database_url.config(conn_max_age=600, ssl_require=True)
-DATABASES = {'default': db_from_env}
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "dt7lksind2c0e",
+        "USER": "ufpa9b7pi4i7fl",
+        "PASSWORD": "p7852a3b276b8e90d16158fbe5ffa122dbe81915b3e57c521a616f9407c84a329",
+        "HOST": "cb4l59cdg4fg1k.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com",
+        "PORT": "5432",
+    }
+}
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
