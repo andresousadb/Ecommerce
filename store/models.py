@@ -33,6 +33,7 @@ class Product(models.Model):
     logo_altText = models.CharField(max_length=200, blank=True, verbose_name=_('Texto alternativo do Logo'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Criado em'))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Atualizado em'))
+    views_count = models.IntegerField(default=0)  # Adicionando campo para contar visualizações
 
     def discountPrice(self):
         if self.discount_percentage > 0:

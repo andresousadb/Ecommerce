@@ -51,11 +51,11 @@
 									<select class="input-select" onchange="if (this.value) window.location.href=this.value">
 									<option>Categorias</option>
 									{% for catg in cat_links %}
-										<option value="{{ catg.get_url }}">{{ catg.name | truncatewords:"1" }}</option>
+										<option value="{{ catg.get_url }}">{{ catg.name}}</option>
 						            {% endfor %}
 									</select>
 									<input class="input" placeholder="Digite" name="keyword">
-									<button class="search-btn" type="submit">Procurar</button>
+									<button class="search-btn" type="submit"> Procurar</button>
 								</form>
 							</div>
 						</div>
@@ -105,6 +105,7 @@
 					<ul class="main-nav nav navbar-nav">
 						<li><a href="{% url 'index' %}">Inicio</a></li>
 						<li><a href="{% url 'store' %}">Produtos</a></li>
+
 
 <!--						<li class="dropdown">-->
 <!--							<a class="dropdown-toggle" data-toggle="dropdown" href="#">Categorias-->

@@ -70,8 +70,10 @@
                                 </div>
                             </div>
                             <div class="invoice-footer mt25">
+                                   {% if order.status == 'Aceito' %}
                                 <p class="text-center">Obrigado por comprar conosco!</p>
-                                 {% if order.status == 'Aceito' %}
+                                  {% endif %}
+                                 {% if order.status == 'Orçamento' %}
                                 <a href="https://wa.me/+5561995020150?text=Olá, me chamo {{order.full_name}} e %20gostaria%20de%20fazer%20 o %20pedido de número: {{ order.order_number }}"
                                    class="primary-btn order-submit btn-block" style="background-color:black;color:#0ae72d;">Pedido pelo Whatsapp</a>
                                   {% endif %}

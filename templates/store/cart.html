@@ -81,7 +81,7 @@
                             {% if request.user.is_authenticated %}
                                     <a href="{% url 'checkout' %}" style="background-color:black;color:#00d7b8;" class="btn btn-block">Confira</a>
                                 {% else %}
-                                    <a href="{% url 'login' %}?next={% url 'checkout' %}" style="background-color:black;color:#ff0000;" class="btn btn-block">Fazer login</a>
+                                    <a href="{% url 'login' %}?next={% url 'checkout' %}" style="background-color:black;color:#00d7b8;" class="btn btn-block">Fazer login</a>
                                 {% endif %}
                             <a href="{% url 'store' %}" style="background-color:black;color:#00d7b8;" class="btn btn-light btn-block">Continue Comprando</a>
                             <a href="{% url 'clear_cart' %}" style="background-color:black;color:#00d7b8;" class="btn btn-light btn-block">Limpar Carrinho</a> <!-- Botão para limpar o carrinho -->

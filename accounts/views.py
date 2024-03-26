@@ -16,6 +16,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from orders.models import Order, OrderProduct
+import re
 
 
 
@@ -32,6 +33,22 @@ def register(request):
             email = form.cleaned_data['email']
             tel = form.cleaned_data['tel']
             password = form.cleaned_data['password']
+
+            # Verifica se a senha atende aos critérios
+            if (len(password) < 8 or
+                    not any(char.isupper() for char in password) or
+                    not any(char.isdigit() for char in password) or
+                    not re.search(r'[!@#$%¨&*]', password)):
+
+                messages.error(request, 'A senha precisa atender aos seguintes critérios:\n'
+                                        ' * Ao menos 8 caracteres\n'
+                                        ' * Ao menos uma letra MAIÚSCULA\n'
+                                        ' * Ao menos um número\n'
+                                        ' * Ao menos um caractere especial (!@#$%¨&*)')
+
+                return render(request, 'accounts/register.html', {'form': form})
+            else:
+                pass
 
             # Verificar se o email já está cadastrado
             if Account.objects.filter(email=email).exists():
@@ -71,6 +88,7 @@ def register(request):
         # Se a requisição não for POST, exibe o formulário vazio
         form = RegistrationForm()
     return render(request, 'accounts/register.html', {'form': form})
+
 
 
 
@@ -126,7 +144,7 @@ def forgot_password(request):
         if Account.objects.filter(email=email).exists():
             user = Account.objects.get(email__exact=email)
             current_site = get_current_site(request)
-            subject = 'Password reset request.'
+            subject = 'Solicitação de redefinição de senha.'
             body = render_to_string('accounts/password_reset_request.html', {
                 'user':user,
                 'domain': current_site,
@@ -195,13 +213,11 @@ def edit_profile(request):
         profile_form = UserProfileForm(request.POST, instance=profile)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
-            profile = profile_form.save()
-            logout(request)
+            profile_form.save()
             messages.success(request, 'Seu perfil foi atualizado com sucesso.')
-            return redirect('login')
+            return redirect('edit_profile')
         else:
-            print("User form errors:", user_form.errors)
-            print("Profile form errors:", profile_form.errors)
+            print("Formulários inválidos!")  # Debugging
     else:
         user_form = UserForm(instance=request.user)
         profile_form = UserProfileForm(instance=profile)
@@ -213,6 +229,8 @@ def edit_profile(request):
 
     return render(request, 'accounts/edit_profile.html', context)
 
+
+
 @login_required
 def change_password(request):
     if request.method == 'POST':
@@ -222,6 +240,20 @@ def change_password(request):
         if request.user.is_authenticated:
             user = Account.objects.get(email=request.user.email)
             if new_password == confirm_password:
+                # Verifica se a senha atende aos critérios
+                if (len(new_password) < 8 or
+                        not any(char.isupper() for char in new_password) or
+                        not any(char.isdigit() for char in new_password) or
+                        not re.search(r'[!@#$%¨&*]', new_password)):
+                    messages.error(request, 'A senha precisa atender aos seguintes critérios:\n'
+                                            ' * Ao menos 8 caracteres\n'
+                                            ' * Ao menos uma letra MAIÚSCULA\n'
+                                            ' * Ao menos um número\n'
+                                            ' * Ao menos um caractere especial (!@#$%¨&*)')
+                    return render(request, 'accounts/change_password.html')
+                else:
+                    pass
+
                 ok = user.check_password(current_password)
                 if ok:
                     user.set_password(confirm_password)
@@ -267,8 +299,6 @@ def order_detail(request, order_id):
     }
 
     return render(request, 'accounts/order_detail.html', context)
-
-
 
 
 

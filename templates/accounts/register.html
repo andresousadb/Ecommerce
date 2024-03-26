@@ -6,12 +6,12 @@
 
 
 <!-- container -->
-<div class="container center" style="justify-content:center; padding-left:25%;">
-    <div class="card mx-auto" style="width:70%; margin-top:40px;">
+<div class="container center">
+    <div class="card mx-auto">
       <article class="card-body">
 	  				{% include 'includes/alerts.html' %}
 								  <div class="text-danger" style= color:red;>
-									  {{ form.email.errors }}
+									  {{ form.email.errors }} {{ form.tel.errors }}
 									</div>
 				    {{ form.non_field_errors }}
 		  <br>
@@ -38,6 +38,7 @@
 				<div class="form-group">
 					<label>Telefone</label>
 					{{ form.tel }}
+					<small class="form-text text-muted">Nunca compartilharemos seu telefone com mais ninguém.</small>
 				</div>
 
 				<div class="form-row">
@@ -59,7 +60,7 @@
 		</article><!-- card-body.// -->
 	</div> <!-- card .// -->
 	<div>
-    <p style="text-align:center;">Já tem uma conta ? <a href="{% url 'login' %}">Log In</a></p>
+    <p style="text-align:center;">Já tem uma conta ? <a href="{% url 'login' %}">Login</a></p>
     </div>
 </div>
 <!-- /container -->

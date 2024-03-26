@@ -11,11 +11,21 @@ class AccountAdmin(UserAdmin):
 
     filter_horizontal = ()
     list_filter = ()
-    fieldsets = ()
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal Info', {'fields': ('f_name', 'l_name', 'tel')}),
+        ('Permissions', {'fields': ('is_active',)}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'f_name', 'l_name', 'tel', 'password1', 'password2', 'is_active'),
+        }),
+    )
 
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'city', 'state', 'country')
-
 
 
 admin.site.register(Account, AccountAdmin)

@@ -12,52 +12,49 @@
                 {% include 'includes/dashboard_sidebar.html' %}
 					<div class="col-md-7">
 						<!-- Billing Details -->
-<div class="billing-details">
-    <div class="section-title">
-        <h3 class="title">Edite seu perfil</h3>
-    </div>
+						<div class="billing-details">
+							<div class="section-title">
+								<h3 class="title">Edite seu perfil</h3>
+							</div>
 
-    <form action="{% url 'edit_profile' %}" method='POST'>
-        {% csrf_token %}
-        <label>Nome</label>
-        <div class="form-group">
-            {{ user_form.f_name }}
-        </div>
-        <label>Sobrenome</label>
-        <div class="form-group">
-            {{ user_form.l_name }}
-        </div>
-        <label>Email</label>
-        <div class="form-group">
-            {{ user_form.email }}
-        </div>
-        <label>Telefone</label>
-        <div class="form-group">
-            {{ user_form.tel }}
-        </div>
-        <label>Endereço</label>
-        <div class="form-group">
-            {{ profile_form.address }}
-        </div>
-        <label>Cidade</label>
-        <div class="form-group">
-            {{ profile_form.city }}
-        </div>
-        <label>UF</label>
-        <div class="form-group">
-            {{ profile_form.state }}
-        </div>
-<!--        <label>País</label>-->
-<!--        <div class="form-group">-->
-<!--            {{ profile_form.country }}-->
-<!--        </div>-->
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block" style="background-color:black; color:red; border-color: #D10024;">Save</button>
-        </div> <!-- form-group// -->
-    </form>
-</div>
-<!-- /Billing Details -->
+							<form action="{% url 'edit_profile' %}" method='POST'>
+							{% csrf_token %}
+                            <label>Nome</label>
+							<div class="form-group">
+								{{user_form.f_name}}
+							</div>
+							<label>Sobrenome</label>
+							<div class="form-group">
+								{{user_form.l_name}}
+							</div>
 
+
+							<label>Telefone</label>
+                        <div class="form-group">
+                            {{ user_form.tel }}
+                            {% if user_form.errors.tel %}
+                                <p class="text-danger">{{ user_form.errors.tel }}</p>
+                            {% endif %}
+                        </div>
+
+							<label>Endereço</label>
+							<div class="form-group">
+								{{profile_form.address}}
+							</div>
+							<label>Cidade</label>
+							<div class="form-group">
+								{{profile_form.city}}
+							</div>
+							<label>UF</label>
+							<div class="form-group">
+								{{profile_form.state}}
+							</div>
+							<div class="form-group">
+             					 <button type="submit" class="btn btn-primary btn-block" style="background-color:black; color:#00d7b8; border-color: #00d7b8;"> Salvar  </button>
+          					</div> <!-- form-group// -->
+                            </form>
+						</div>
+						<!-- /Billing Details -->
 					</div>
                         <!-- col -->
 				</div>

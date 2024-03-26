@@ -68,8 +68,8 @@
 									<i class="fa fa-star-o empty"></i>
 									{% endif %}
 								</div>
-								
-								<a class="review-link" href="#review_product">{{reviews_count}} Visualizacões | Adicionar Comentário</a>
+
+								<a class="review-link" href="#review_product">{{single_product.views_count}} Visualizacões | Adicionar Comentário</a>
 							</div>
 							<div>
 								<h3 class="product-price">{% if single_product.discount_price %}R$ {{ single_product.discount_price }} <del class="product-old-price">R$ {{ single_product.price }}</del></h3>{% else %}<h3>R$ {{ single_product.price }}</h3>{% endif %}
@@ -150,8 +150,8 @@
 														{% elif single_product.average_rating == 0 %}
 														<i class="fa fa-star-o empty"></i>
 														{% endif %}
-													</div>												
-												</div>											
+													</div>
+												</div>
 											</div>
 										</div>
 										<!-- /Rating -->
@@ -196,7 +196,7 @@
 															<p>{{review.review}}</p>
 														</div>
 													</li>
-													<li>														
+													<li>
 											</div>
 										</div>
 										{% endfor %}
@@ -205,15 +205,15 @@
 										<!-- Review Form -->
 										<div class="col-md-3">
 											<div id="review-form">
-											    {% include 'includes/alerts.html' %}											     
+											    {% include 'includes/alerts.html' %}
 												<form class="review-form" action="{% url 'submit_review' single_product.id %}" method="POST">
 												 {% csrf_token %}
 													{% comment %} <input class="input" type="text" placeholder="Your Name">
 													<input class="input" type="email" placeholder="Your Email"> {% endcomment %}
-													<input class="input" type="text" placeholder="Title" name="subject">
-													<textarea class="input" placeholder="Your Review" name="review"></textarea>
+													<input class="input" type="text" placeholder="Título" name="subject">
+													<textarea class="input" placeholder="Escreve sua avaliação" name="review"></textarea>
 													<div class="input-rating">
-														<span>Your Rating: </span>
+														<span>Sua avaliação: </span>
 														<div class="stars">
 															<input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
 															<input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
@@ -233,7 +233,7 @@
 													{% endif %}
 												</form>
 											</div>
-										</div>																														
+										</div>
 										<!-- /Review Form -->
 									</div>
 								</div>

@@ -62,6 +62,7 @@ class Account(AbstractBaseUser):
         return True
 
 
+
 CIDADE = (
     ('Rio Branco', 'Rio Branco'),
     ('Maceió', 'Maceió'),

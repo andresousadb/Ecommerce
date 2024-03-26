@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect,Http404
 from category.models import Category
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
@@ -44,12 +44,13 @@ def store(request, category_slug=None):
                                                 'topSelling_products': topSelling_products})
 
 
+
 def product_detail(request, category_slug, product_slug):
     try:
         single_product = Product.objects.get(category__slug=category_slug, slug=product_slug)
         in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request), product=single_product).exists()
-    except Exception as e:
-        raise e
+    except Product.DoesNotExist:
+        raise Http404("Product does not exist")
 
     try:
         orderproduct = CartItem.objects.filter(user=request.user.id, product_id=single_product.id).exists()
@@ -59,6 +60,10 @@ def product_detail(request, category_slug, product_slug):
     reviews = ReviewRating.objects.filter(product_id=single_product.id, status=True)
     reviews_count = reviews.count()
     product_gallery = ProductGallery.objects.filter(product_id=single_product.id)
+
+    # Incrementa e salva a contagem de visualizações
+    single_product.views_count += 1
+    single_product.save()
 
     context = {
         'single_product': single_product,
@@ -70,6 +75,10 @@ def product_detail(request, category_slug, product_slug):
     }
 
     return render(request, 'store/product.html', context)
+
+
+
+
 
 
 def search(request):

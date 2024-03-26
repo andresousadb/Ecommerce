@@ -1,9 +1,7 @@
 from pathlib import Path
 import os
 from decouple import config
-import dj_database_url
 
-DATABASE_URL = "PGPASSWORD=fFDTnykDFEnVRMlpfyTAbVQPRHXnWACp psql -h viaduct.proxy.rlwy.net -U postgres -p 14737 -d railway"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,8 +10,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['*']
-
-
 
 
 # Application definition
@@ -86,24 +82,24 @@ WSGI_APPLICATION = 'gordegames.wsgi.application'
 
 AUTH_USER_MODEL ='accounts.Account'
 
-DATABASES = {
-    "default": dj_database_url.config(default=DATABASE_URL,conn_max_age=1800),
-}
+# DATABASES = {
+#     "default": dj_database_url.config(default=DATABASE_URL,conn_max_age=1800),
+# }
 
-
+#
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "ecommerce",
-#         "USER": "user_admin",
-#         "PASSWORD": "user_admin@2024",
-#         "HOST": "localhost",
-#         "PORT": "5432",
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "ecommerce",
+        "USER": "user_admin",
+        "PASSWORD": "user_admin@2024",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+}
 
 
 # Password validation
