@@ -3,8 +3,11 @@ import os
 from decouple import config
 
 
+# configuração para master
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# configuração para dev
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 
@@ -30,7 +33,6 @@ INSTALLED_APPS = [
     'category',
     'cart',
     'orders',
-    'api',
     'django_filters',
 ]
 
@@ -90,13 +92,28 @@ AUTH_USER_MODEL ='accounts.Account'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+#database master
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "dt7lksind2c0e",
+#         "USER": "ufpa9b7pi4i7fl",
+#         "PASSWORD": "p7852a3b276b8e90d16158fbe5ffa122dbe81915b3e57c521a616f9407c84a329",
+#         "HOST": "cb4l59cdg4fg1k.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com",
+#         "PORT": "5432",
+#     }
+# }
+# database dev
+
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "dt7lksind2c0e",
-        "USER": "ufpa9b7pi4i7fl",
-        "PASSWORD": "p7852a3b276b8e90d16158fbe5ffa122dbe81915b3e57c521a616f9407c84a329",
-        "HOST": "cb4l59cdg4fg1k.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com",
+        "NAME": "ecommerce",
+        "USER": "user_admin",
+        "PASSWORD": "user_admin@2024",
+        "HOST": "localhost",
         "PORT": "5432",
     }
 }
@@ -139,15 +156,28 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
 ]
 
-# Static files (CSS, JavaScript, Images)
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# Configuração master
 
+# # Static files (CSS, JavaScript, Images)
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#
+# STATIC_URL = '/static/'
+#
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = 'static'
+#
+# LOGIN_URL = '/login'
+
+#configuração dev
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR
 
 LOGIN_URL = '/login'
+
+
 
 #formatar valores
 THOUSAND_SEPARATOR = '.',

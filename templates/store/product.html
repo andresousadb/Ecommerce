@@ -68,15 +68,13 @@
 									<i class="fa fa-star-o empty"></i>
 									{% endif %}
 								</div>
-
-								<a class="review-link" href="#review_product">{{single_product.views_count}} Visualizacões | Adicionar Comentário</a>
+								<a class="review-link" href="#review_product">{{reviews_count}} - Avaliações </a>
 							</div>
 							<div>
 								<h3 class="product-price">{% if single_product.discount_price %}R$ {{ single_product.discount_price }} <del class="product-old-price">R$ {{ single_product.price }}</del></h3>{% else %}<h3>R$ {{ single_product.price }}</h3>{% endif %}
-								<span class="product-available">Estoque: {{ single_product.stock }}</span>
+								<h4 class="product-available">Estoque: {{ single_product.stock }} </h4>
 							</div>
 							<br>
-							<p>{{ single_product.description }}</p>
                             {% if single_product.stock < 1 %}							
 								<h6 style="color:red">fora de estoque</h6>
 								{% elif in_cart %}
@@ -91,6 +89,10 @@
 								<li>Categoria:</li>
 								<li><a href="#">{{ single_product.category }}</a></li>								
 							</ul>
+							<ul class="product-links">
+								<li>Visualizações:</li>
+								<li> {{single_product.views_count}} </li>
+							</ul>
 						</div>
 					</div>
 					<!-- /Product details -->
@@ -100,8 +102,8 @@
 						<div id="product-tab">
 							<!-- product tab nav -->
 							<ul class="tab-nav" id="review_product">
-								<li class="active"><a data-toggle="tab" href="#tab1">Descrição</a></l>
-								<li><a data-toggle="tab" href="#tab3">Visualizações {{reviews_count}}</a></li>
+								<li class="active"> <a data-toggle="tab" href="#tab1">Descrição</a></li>
+								<li><a data-toggle="tab" href="#tab3">Avaliações</a></li>
 							</ul>
 							<!-- /product tab nav -->
 
@@ -111,7 +113,7 @@
 								<div id="tab1" class="tab-pane fade in active">
 									<div class="row">
 										<div class="col-md-12">
-											<p>{{ single_product.description }}</p>
+<!--											<p>{{ single_product.description }}</p>-->
 										</div>
 									</div>
 								</div>
@@ -197,10 +199,12 @@
 														</div>
 													</li>
 													<li>
-											</div>
+											    </div>
 										</div>
 										{% endfor %}
 										<!-- /Reviews -->
+
+
 
 										<!-- Review Form -->
 										<div class="col-md-3">
@@ -224,7 +228,7 @@
 													</div>
 													{% if request.user.is_authenticated %}
 													{% if orderproduct %}
-													<button class="primary-btn">Submit</button>
+													<button class="primary-btn">Enviar</button>
 													{% else %}
 													<p>Você deve comprar o produto para enviar uma avaliação.</p>
 													{% endif %}
@@ -235,6 +239,9 @@
 											</div>
 										</div>
 										<!-- /Review Form -->
+
+
+
 									</div>
 								</div>
 								<!-- /tab3  -->

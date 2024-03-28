@@ -1,4 +1,4 @@
-from .models import  Order, OrderProduct
+from .models import Order, OrderProduct
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html

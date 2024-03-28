@@ -36,7 +36,7 @@ class Account(AbstractBaseUser):
     f_name = models.CharField(max_length=50, verbose_name=_('Nome'))
     l_name = models.CharField(max_length=50, verbose_name=_('Sobrenome'))
     email = models.EmailField(max_length=100, unique=True, verbose_name=_('Email'))
-    tel = models.CharField(max_length=50, unique=True, blank=True, verbose_name=_('Telefone'))
+    tel = models.CharField(max_length=11, unique=True, blank=True, verbose_name=_('Telefone'))
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)

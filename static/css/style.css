@@ -94,7 +94,7 @@ ul, ol {
 .primary-btn {
   display: inline-block;
   padding: 12px 30px;
-  background-color: #D10024;
+  background-color: #00d7b8;
   border: none;
   border-radius: 40px;
   color: #FFF;
@@ -1486,7 +1486,7 @@ textarea.input {
 }
 
 .product-details .review-link {
-  font-size: 12px;
+  font-size: 15px;
 }
 
 .product-details .product-price {
