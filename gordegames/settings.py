@@ -12,7 +12,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config('SECRET_KEY')
 
 #debug dev
-# DEBUG = config('DEBUG', cast=bool)
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
@@ -155,24 +155,26 @@ LOCALE_PATHS = [
 # Configuração master
 
 # Static files (CSS, JavaScript, Images)
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-STATIC_URL = '/static/'
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = 'static'
-
-LOGIN_URL = '/login'
-
-
 #configuração dev
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#
 # STATIC_URL = '/static/'
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 #
 # MEDIA_URL = '/media/'
-# MEDIA_ROOT = BASE_DIR
+# MEDIA_ROOT = 'static'
 #
 # LOGIN_URL = '/login'
+
+
+#configuração master
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR
+
+LOGIN_URL = '/login'
 
 
 #formatar valores
