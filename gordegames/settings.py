@@ -2,20 +2,13 @@ from pathlib import Path
 import os
 from decouple import config
 
-
-# configuração para master
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# configuração para dev
-# BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 
-#debug dev
-# DEBUG = config('DEBUG', cast=bool)
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -49,7 +42,7 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    
+
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
@@ -59,7 +52,6 @@ REST_FRAMEWORK = {
 SESSION_EXPIRE_SECONDS = 900  # 15 minutes
 SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
 SESSION_TIMEOUT_REDIRECT = '/accounts/login'
-
 
 ROOT_URLCONF = 'gordegames.urls'
 
@@ -83,12 +75,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'gordegames.wsgi.application'
 
-AUTH_USER_MODEL ='accounts.Account'
+AUTH_USER_MODEL = 'accounts.Account'
 
+# DATABASES = {
+#     "default": dj_database_url.config(default=DATABASE_URL,conn_max_age=1800),
+# }
 
+#
+# Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-#database master
 
 DATABASES = {
     "default": {
@@ -100,21 +95,6 @@ DATABASES = {
         "PORT": "5432",
     }
 }
-
-
-# database dev
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "ecommerce",
-#         "USER": "user_admin",
-#         "PASSWORD": "user_admin@2024",
-#         "HOST": "localhost",
-#         "PORT": "5432",
-#     }
-# }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -134,7 +114,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -152,32 +131,17 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
 ]
 
-# Configuração master
-
 # Static files (CSS, JavaScript, Images)
-#configuração dev
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-#
-# STATIC_URL = '/static/'
-#
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = 'static'
-#
-# LOGIN_URL = '/login'
-
-
-#configuração master
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR
 
 LOGIN_URL = '/login'
 
-
-#formatar valores
+# formatar valores
 THOUSAND_SEPARATOR = '.',
 USE_THOUSAND_SEPARATOR = True
 
@@ -187,11 +151,12 @@ USE_THOUSAND_SEPARATOR = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 from django.contrib.messages import constants as messages
+
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
