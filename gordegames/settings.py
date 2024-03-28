@@ -164,6 +164,7 @@ MEDIA_ROOT = 'static'
 
 LOGIN_URL = '/login'
 
+
 #configuração dev
 # STATIC_URL = '/static/'
 # STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
