@@ -23,13 +23,13 @@ class Product(models.Model):
         decimal_places=2,
     )
     discount_percentage = models.IntegerField(default=0, blank=True, verbose_name=_('Porcentagem de desconto'))
-    product_image = models.ImageField(upload_to='static/img', verbose_name=_('Imagem do Produto'))
+    product_image = models.ImageField(upload_to='imagens/', verbose_name=_('Imagem do Produto'))
     alt_text = models.CharField(max_length=200, verbose_name=_('Texto alternativo'))
     stock = models.IntegerField(verbose_name=_('Estoque'))
     is_available = models.BooleanField(default=True, verbose_name=_('Disponível'))
     is_trending = models.BooleanField(default=False, verbose_name=_('Tendência'))
     is_topSelling = models.BooleanField(default=False, verbose_name=_('Mais Vendido'))
-    logo_image = models.ImageField(upload_to='static/img', blank=True, verbose_name=_('Imagem do Logo'))
+    logo_image = models.ImageField(upload_to='imagens/', blank=True, verbose_name=_('Imagem do Logo'))
     logo_altText = models.CharField(max_length=200, blank=True, verbose_name=_('Texto alternativo do Logo'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Criado em'))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Atualizado em'))
@@ -75,7 +75,7 @@ class ReviewRating(models.Model):
 
 class ProductGallery(models.Model):
     product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='static/img', max_length=255)
+    image = models.ImageField(upload_to='imagens/', max_length=255)
 
     def __str__(self):
         return self.product.name

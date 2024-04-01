@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 from decouple import config
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 
@@ -28,6 +28,8 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'django_filters',
+    'cloudinary',
+    'cloudinary_storage'
 ]
 
 MIDDLEWARE = [
@@ -77,12 +79,8 @@ WSGI_APPLICATION = 'gordegames.wsgi.application'
 
 AUTH_USER_MODEL = 'accounts.Account'
 
-# DATABASES = {
-#     "default": dj_database_url.config(default=DATABASE_URL,conn_max_age=1800),
-# }
 
-#
-# Database
+#Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
@@ -127,19 +125,23 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-]
 
-# Static files (CSS, JavaScript, Images)
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dgwik5owa',
+    'API_KEY': '242938592666911',
+    'API_SECRET': 'VYLBQg0tVBI-VnkifQv61Q3vmTE'
+}
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 STATIC_URL = '/static/'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR
+MEDIA_URL = '/gordegames/'
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 LOGIN_URL = '/login'
+
 
 # formatar valores
 THOUSAND_SEPARATOR = '.',
