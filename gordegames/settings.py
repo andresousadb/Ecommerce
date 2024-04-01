@@ -27,8 +27,7 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'django_filters',
-    'cloudinary',
-    'cloudinary_storage',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +58,7 @@ ROOT_URLCONF = 'gordegames.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -125,17 +124,41 @@ USE_L10N = True
 USE_TZ = True
 
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dgwik5owa',
-    'API_KEY': '242938592666911',
-    'API_SECRET': 'VYLBQg0tVBI-VnkifQv61Q3vmTE'
-}
 
-STATIC_URL = '/gordegames/static/'
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-MEDIA_URL = '/gordegames/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+#AWS CONFIGURAÇÃO
+
+AWS_ACESS_KEY_ID = 'AKIAU6GD2ZHCEP66Z6GY'
+AWS_ACESS_ACESS_KEY = 'nZrBXPRrj60gtJ858cfOW9NVQAOLGd5ARrX5BFzk'
+
+
+AWS_STORAGE_BUCKET_NAME = 'gordegames'
+
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazon.com' % AWS_STORAGE_BUCKET_NAME
+
+AWS_S3_FILE_OVERWRITE = False
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # formatar valores
