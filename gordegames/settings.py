@@ -131,7 +131,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': 'VYLBQg0tVBI-VnkifQv61Q3vmTE'
 }
 
-STATIC_URL = '/static/'
+STATIC_URL = '/gordegames/static/'
 STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 MEDIA_URL = '/gordegames/'
