@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 from decouple import config
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 
@@ -19,7 +19,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
 
     # my apps
     'accounts',
@@ -132,17 +131,11 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': 'VYLBQg0tVBI-VnkifQv61Q3vmTE'
 }
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-
 STATIC_URL = '/static/'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Diretório onde os arquivos estáticos serão coletados
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
 MEDIA_URL = '/gordegames/'
-
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-LOGIN_URL = '/login'
 
 
 # formatar valores
