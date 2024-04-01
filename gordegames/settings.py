@@ -58,7 +58,7 @@ ROOT_URLCONF = 'gordegames.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,6 +81,17 @@ AUTH_USER_MODEL = 'accounts.Account'
 #Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "dt7lksind2c0e",
+#         "USER": "ufpa9b7pi4i7fl",
+#         "PASSWORD": "p7852a3b276b8e90d16158fbe5ffa122dbe81915b3e57c521a616f9407c84a329",
+#         "HOST": "cb4l59cdg4fg1k.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com",
+#         "PORT": "5432",
+#     }
+# }
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -91,6 +102,7 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -123,31 +135,24 @@ USE_L10N = True
 
 USE_TZ = True
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
-
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-STATIC_URL = 'static/'
+LOGIN_URL = '/login'
 
-STATICFILES_DIRS = [BASE_DIR / 'static']
-
-#AWS CONFIGURAÇÃO
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
-
 AWS_STORAGE_BUCKET_NAME = 'gordegames'
-
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazon.com' % AWS_STORAGE_BUCKET_NAME
-
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_FILE_OVERWRITE = False
 
-
+# Configurações específicas para arquivos de mídia (imagens)
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-
+MEDIAFILES_LOCATION = 'imagens'
 
 
 # formatar valores
