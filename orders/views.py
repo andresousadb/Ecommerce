@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 from cart.models import Cart, CartItem
 from cart.views import _cart_id
 from accounts.models import Profile,Account
-from store.models import Product, ProductGallery, ReviewRating
+from store.models import Product, ReviewRating
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone

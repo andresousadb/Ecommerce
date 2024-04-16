@@ -4,6 +4,7 @@ from category.models import Category
 from accounts.models import Account
 from django.db.models import Avg
 from django.utils.translation import gettext_lazy as _
+from PIL import Image
 
 class Product(models.Model):
     category = models.ForeignKey(Category, blank=True, on_delete=models.CASCADE, verbose_name=_('Categoria'))
@@ -28,12 +29,20 @@ class Product(models.Model):
     stock = models.IntegerField(verbose_name=_('Estoque'))
     is_available = models.BooleanField(default=True, verbose_name=_('Disponível'))
     is_trending = models.BooleanField(default=False, verbose_name=_('Tendência'))
-    is_topSelling = models.BooleanField(default=False, verbose_name=_('Mais Vendido'))
-    logo_image = models.ImageField(upload_to='imagens/', blank=True, verbose_name=_('Imagem do Logo'))
     logo_altText = models.CharField(max_length=200, blank=True, verbose_name=_('Texto alternativo do Logo'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Criado em'))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Atualizado em'))
     views_count = models.IntegerField(default=0)  # Adicionando campo para contar visualizações
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.product_image:
+            image_path = self.product_image.path
+            img = Image.open(image_path)
+            # Redimensiona a imagem para 800x800 mantendo a proporção e aplicando antialiasing
+            img_resized = img.resize((512, 682))
+            img_resized.save(image_path)
 
     def discountPrice(self):
         if self.discount_percentage > 0:
@@ -72,15 +81,3 @@ class ReviewRating(models.Model):
 
     def __str__(self):
         return self.subject
-
-class ProductGallery(models.Model):
-    product = models.ForeignKey(Product, default=None, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='imagens/', max_length=255)
-
-    def __str__(self):
-        return self.product.name
-
-    class Meta:
-         verbose_name="Product Gallery"
-         verbose_name_plural = "Product Galleries"
-

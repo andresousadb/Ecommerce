@@ -4,7 +4,7 @@ from cart.models import Cart, CartItem
 from cart.views import _cart_id
 from accounts.models import Profile,Account
 from .forms import ReviewForm
-from .models import Product, ProductGallery, ReviewRating
+from .models import Product, ReviewRating
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -29,7 +29,6 @@ def store(request, category_slug=None):
         paginator = Paginator(products, 8)
         page = request.GET.get('page')
         paged_products = paginator.get_page(page)
-        topSelling_products = Product.objects.filter(is_available=True, is_topSelling=True).order_by()[:3]
         product_count = products.count()
 
     else:
@@ -37,11 +36,8 @@ def store(request, category_slug=None):
         paginator = Paginator(products, 8)
         page = request.GET.get('page')
         paged_products = paginator.get_page(page)
-        topSelling_products = Product.objects.filter(is_available=True, is_topSelling=True).order_by()[:3]
         product_count = products.count()
-    return render(request, 'store/store.html', {'products': paged_products, 'product_count': product_count,
-                                                'topSelling_products': topSelling_products})
-
+    return render(request, 'store/store.html', {'products': paged_products, 'product_count': product_count})
 
 
 def product_detail(request, category_slug, product_slug):
