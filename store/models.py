@@ -63,14 +63,16 @@ class Product(models.Model):
                 # Criar um novo nome de arquivo com a extensão PNG
                 resized_image_name = os.path.splitext(original_image_name)[0] + '.png'
 
-                # Salvar o arquivo redimensionado no mesmo caminho e nome do arquivo original no S3
-                default_storage.save(os.path.join('imagens', resized_image_name),
-                                     ContentFile(img_buffer.getvalue()))
+                # Salvar o arquivo redimensionado no S3
+                resized_image_path = os.path.join('imagens', resized_image_name)
+                default_storage.save(resized_image_path, ContentFile(img_buffer.getvalue()))
 
+                # Excluir a imagem original
                 default_storage.delete(self.product_image.name)
 
-                # Atualizar o campo product_image com o mesmo caminho e nome do arquivo original
-                self.product_image.name = os.path.join('imagens', resized_image_name)
+                # Atualizar o campo product_image com o caminho da imagem redimensionada
+                self.product_image.name = resized_image_path
+                self.save(update_fields=['product_image'])  # Salva apenas o campo product_image no banco de dados
 
     def discountPrice(self):
         if self.discount_percentage > 0:
