@@ -1,3 +1,5 @@
+from io import BytesIO
+
 from django.db import models
 from django.urls import reverse
 from category.models import Category
@@ -5,6 +7,11 @@ from accounts.models import Account
 from django.db.models import Avg
 from django.utils.translation import gettext_lazy as _
 from PIL import Image
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import os
+import uuid
 
 class Product(models.Model):
     category = models.ForeignKey(Category, blank=True, on_delete=models.CASCADE, verbose_name=_('Categoria'))
@@ -38,11 +45,32 @@ class Product(models.Model):
         super().save(*args, **kwargs)
 
         if self.product_image:
-            image_path = self.product_image.path
-            img = Image.open(image_path)
-            # Redimensiona a imagem para 800x800 mantendo a proporção e aplicando antialiasing
-            img_resized = img.resize((512, 682))
-            img_resized.save(image_path)
+            # Abrir a imagem a partir do armazenamento padrão do Django
+            with default_storage.open(self.product_image.name, 'rb') as image_file:
+                # Ler a imagem do arquivo
+                img = Image.open(image_file)
+                # Redimensionar
+                img_resized = img.resize((512, 682))
+
+                # Salvar a imagem redimensionada em um buffer de bytes
+                img_buffer = BytesIO()
+                img_resized.save(img_buffer, format='PNG')
+                img_buffer.seek(0)
+
+                # Obter o nome do arquivo original
+                original_image_name = os.path.basename(self.product_image.name)
+
+                # Criar um novo nome de arquivo com a extensão PNG
+                resized_image_name = os.path.splitext(original_image_name)[0] + '.png'
+
+                # Salvar o arquivo redimensionado no mesmo caminho e nome do arquivo original no S3
+                default_storage.save(os.path.join('imagens', resized_image_name),
+                                     ContentFile(img_buffer.getvalue()))
+
+                default_storage.delete(self.product_image.name)
+
+                # Atualizar o campo product_image com o mesmo caminho e nome do arquivo original
+                self.product_image.name = os.path.join('imagens', resized_image_name)
 
     def discountPrice(self):
         if self.discount_percentage > 0:
