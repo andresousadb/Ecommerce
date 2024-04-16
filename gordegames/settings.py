@@ -78,26 +78,15 @@ WSGI_APPLICATION = 'gordegames.wsgi.application'
 AUTH_USER_MODEL = 'accounts.Account'
 
 
-#Database
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "dt7lksind2c0e",
-#         "USER": "ufpa9b7pi4i7fl",
-#         "PASSWORD": "p7852a3b276b8e90d16158fbe5ffa122dbe81915b3e57c521a616f9407c84a329",
-#         "HOST": "cb4l59cdg4fg1k.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com",
-#         "PORT": "5432",
-#     }
-# }
-
+# Database
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecommerce",
-        "USER": "user_admin",
-        "PASSWORD": "user_admin@2024",
-        "HOST": "localhost",
-        "PORT": "5433",
+        "NAME": "dt7lksind2c0e",
+        "USER": "ufpa9b7pi4i7fl",
+        "PASSWORD": "p7852a3b276b8e90d16158fbe5ffa122dbe81915b3e57c521a616f9407c84a329",
+        "HOST": "cb4l59cdg4fg1k.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com",
+        "PORT": "5432",
     }
 }
 
@@ -147,8 +136,8 @@ AWS_STORAGE_BUCKET_NAME = 'gordegames'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_FILE_OVERWRITE = False
 
-# # Configurações específicas para arquivos estáticos (CSS, JS, etc.)
-# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# Configurações específicas para arquivos estáticos (CSS, JS, etc.)
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Configurações específicas para arquivos de mídia (imagens)
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
