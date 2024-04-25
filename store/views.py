@@ -4,22 +4,13 @@ from cart.models import Cart, CartItem
 from cart.views import _cart_id
 from accounts.models import Profile,Account
 from .forms import ReviewForm
-from .models import Product, ReviewRating
+from .models import Product, ReviewRating,ProductGallery
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.utils import timezone
-from django.views.generic import View
-from django.http import HttpResponse
-from django.template.loader import get_template
-from xhtml2pdf import pisa
 from orders.models import OrderProduct
-from django.utils.decorators import method_decorator
-from django.urls import reverse
-
-
 
 def store(request, category_slug=None):
     categories = None
@@ -72,8 +63,6 @@ def product_detail(request, category_slug, product_slug):
     }
 
     return render(request, 'store/product.html', context)
-
-
 
 
 

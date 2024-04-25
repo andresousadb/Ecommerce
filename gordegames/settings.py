@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'gordegames.wsgi.application'
 
 AUTH_USER_MODEL = 'accounts.Account'
 
-# Database
+#Database aws
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -88,6 +88,17 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+# # Database local
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecommerce",
+#         "USER": "user_admin",
+#         "PASSWORD": "user_admin@2024",
+#         "HOST": "localhost",
+#         "PORT": "5433",
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
