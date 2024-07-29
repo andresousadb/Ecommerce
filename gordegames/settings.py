@@ -8,7 +8,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = config('DEBUG', cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -89,6 +89,7 @@ AUTH_USER_MODEL = 'accounts.Account'
 #     }
 # }
 # Database local
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -153,7 +154,7 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Enviar email das contas criadas
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
